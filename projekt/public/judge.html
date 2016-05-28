@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Judge Panel</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
+</head>
+<body style="padding:4%">
+
+
+<div class="btn-group-justified" role="group" aria-label="...">
+    <a href="/" class="btn btn-default">Spectator Panel</a>
+    <a href="/judge" class="btn btn-default">Jugde Panel</a>
+    <a href="/admin" class="btn btn-default">Admin Panel</a>
+
+</div>
+
+
+<div id="Judge Login">
+    <div style="padding:20px" class="jumbotron">
+        <div class="text-center">
+            <div id="LoginInput">
+
+                <div class="form-group">
+                    <label for="codeInput">Enter judge unique code:</label>
+                    <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="codeInput">
+
+                </div>
+            </div>
+            <button id="loginButton" style="margin-top:20px" type="button" class="btn btn-default">Enter</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- ---------------------------------------->
+<div id="sedziaContent">
+    <div style="padding:3%" class="jumbotron">
+        <div id="listaKoni">
+
+
+            <h2 style="text-align: center;">Logged as:</h2>
+            <h2 style="text-align: center;">test</h2>
+
+            <div style="margin-top:20px;padding:20px" class="navbar navbar-default">
+                <h3 style="text-align: center;">Actual Horse Under Rating</h3>
+                <table class="table table-">
+                    <thead>
+                    <tr>
+                        <th class="col-md-1">Name</th>
+                        <th class="col-md-1">Sex</th>
+                        <th class="col-md-1">Owner</th>
+                        <th class="col-md-1">Type</th>
+                        <th class="col-md-1">Head and Shoulder</th>
+                        <th class="col-md-1">Clog</th>
+                        <th class="col-md-1">Legs</th>
+                        <th class="col-md-1">Movement</th>
+                        <th class="col-md-1"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+
+                        <td><input type="text" class="form-control" id="typeInput"></td>
+                        <td><input type="text" class="form-control" id="headandshoulderInput"></td>
+                        <td><input type="text" class="form-control" id="clogInput"></td>
+                        <td><input type="text" class="form-control" id="legsInput"></td>
+                        <td><input type="text" class="form-control" id="movementInput"></td>
+                        <td><button type="button" class="btn btn-info">Rate</button></td>
+                    </tr>
+
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>
