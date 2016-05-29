@@ -9,7 +9,11 @@ var async = require('async');
 var waterfall = require('async-waterfall');
 var port = process.env.PORT || 3000;
 var static = require('serve-static');
-var io = require("socket.io")(httpServer);
+var io = require("socket.io")(httpServer)
+
+var horse = require('./models/horsemodel');
+var judge = require('./models/judgemodel');
+var admin = require('./models/adminmodel');
 
 
 app.use('/js/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
@@ -30,7 +34,7 @@ db.once('open', function () {
 
 //-------------------------------------SOCKET.IO------------------------------
 io.sockets.on("connection", function (socket) {
-  socket.on("otworzZawody", function(){
+  socket.on("starttournament", function(){
     if(starttournament){
       io.emit("starttournamenttext", "Already in progres, click abandon to start new")
     }else{
@@ -41,6 +45,7 @@ io.sockets.on("connection", function (socket) {
   socket.on("error", function (err) {
     console.dir(err);
   });
+    
 });
 
 
