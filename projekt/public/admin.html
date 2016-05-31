@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <title>Panel administratora</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/custom.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="javascripts/admin.js"></script>
+    <script src="socket.io.js"></script>
+
 </head>
 <body style="padding:4%">
 
@@ -30,26 +33,93 @@
             <h2 style="text-align: center;">Admin Controll Panel</h2>
 
             <div class="text-center">
-                <button id="startButton" style="margin: 0 auto;" type="button" class="btn btn-block">Start tournament</button>
-                <button id="hurryButton" style="margin: 0 auto;" type="button" class="btn btn-block">Hurry up judges</button>
-                <button id="nextButton" style="margin: 0 auto;" type="button" class="btn btn-block">Next Horse</button>
-                <button id="closeButton" style="margin: 0 auto;" type="button"  class="btn btn-block">Close tournament</button>
-                <button id="removehorseButton" style="margin: 0 auto;" type="button"  class="btn btn-block">Remove horses from startlist</button>
+
             </div>
-            <div id="HorseList">
+            </div>
+
             <div style="margin-top:30px;padding:30px" class="navbar navbar-default">
+            <div id="ActualTournamentList">
+
+
+                <span style="text-align: center" class="glyphicon glyphicon-search" ></span>
+                        <h1 style="text-align: center">Actual Tournaments</h1>
+
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-md-2">Title</th>
+                            <th class="col-md-2">City</th>
+                            <th class="col-md-2">Unique number</th>
+                            <th class="col-md-1"></th>
+                            <th class="col-md-1"></th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Next Horse</button></td>
+                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Hurry judges</button></td>
+                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Close tournament</button></td>
+                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="TournamentList">
+                    <div class="tournamentlistContent">
+                        <h2 style="text-align: center">Tournament List</h2>
+                    </div>
+
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th class="col-md-2">Name</th>
+                            <th class="col-md-2">City</th>
+                            <th class="col-md-2">Number</th>
+                            <th class="col-md-1"></th>
+                            <th class="col-md-1"></th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>test</td>
+                            <td>test</td>
+                            <td>test</td>
+                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Start tournament</button></td>
+                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete tournament</button></td>
+                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+            <div id="HorseList">
+
 
                 <div class="horselistContent">
-                    <span style="text-align: center" class="glyphicon glyphicon-search" ></span>
+
                     <h2 style="text-align: center">Horse List</h2>
                 </div>
 
-            <table class="table table-bordered">
+            <table id ="HorseListTable" class="table table-bordered">
                 <thead>
                 <tr>
-                    <th class="col-md-2">Nazwa</th>
-                    <th class="col-md-2">Płeć</th>
-                    <th class="col-md-2">Hodowca</th>
+                    <th class="col-md-2">Title</th>
+                    <th class="col-md-2">Sex</th>
+                    <th class="col-md-2">Owner</th>
                     <th class="col-md-1"></th>
                     <th class="col-md-1"></th>
                     <th class="col-md-1"></th>
@@ -57,21 +127,49 @@
                 </thead>
                 <tbody>
 
-                <tr>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Add to next tournament</button></td>
-                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Edit Horse</button></td>
-                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete</button></td>
-                </tr>
-
-
 
                 </tbody>
+
             </table>
                 </div>
 
+
+                <div id="JudgeList">
+
+
+                        <div class="judgelistContent">
+                            <h2 style="text-align: center">Judge List</h2>
+                        </div>
+
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th class="col-md-2">Name</th>
+                                <th class="col-md-2">Surname</th>
+                                <th class="col-md-2">Code</th>
+                                <th class="col-md-1"></th>
+                                <th class="col-md-1"></th>
+                                <th class="col-md-1"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td>test</td>
+                                <td>test</td>
+                                <td>test</td>
+                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Add to next tournament</button></td>
+                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Edit Judge</button></td>
+                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete</button></td>
+                            </tr>
+
+
+
+                            </tbody>
+                        </table>
+
+                </div>
+        </div>
         </div>
 
 
@@ -128,11 +226,75 @@
                                 <button id="newtournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>
+                        <div style="margin-top:30px;padding:30px" class="navbar navbar-default">
+
+                            <div class="horselisttournamentContent">
+
+                                <h2 style="text-align: center">Horses ready for tournament</h2>
+                            </div>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-2">Name</th>
+                                    <th class="col-md-2">Sex</th>
+                                    <th class="col-md-2">Owner</th>
+                                    <th class="col-md-1"></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete from tournament</button></td>
+                                </tr>
+
+
+
+                                </tbody>
+                            </table>
+
+
+
+
+                            <div class="judgelisttournamentContent">
+
+                                <h2 style="text-align: center">Judges ready for tournament</h2>
+                            </div>
+
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th class="col-md-2">Name</th>
+                                    <th class="col-md-2">Surname</th>
+                                    <th class="col-md-2">Code</th>
+                                    <th class="col-md-1"></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td>test</td>
+                                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete from tournament</button></td>
+                                </tr>
+
+
+
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
     </div>
-    </div>
+
+
 
 </body>
 </html>
