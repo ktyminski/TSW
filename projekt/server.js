@@ -9,30 +9,18 @@ var mongoose = require('mongoose');
 var async = require('async');
 var waterfall = require('async-waterfall');
 var port = process.env.PORT || 3000;
-var statics = require('serve-static');
+var static = require('serve-static');
 var io = require("socket.io")(httpServer);
-var express  = require('express');
-var app      = express();
-var port     = process.env.PORT || 8080;
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash    = require('connect-flash');
-
-var morgan       = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser   = require('body-parser');
-var session      = require('express-session');
-
-var configDB = require('./config/database.js');
 
 
 var Horse = require('./models/horsemodel');
-var judge = require('./models/judgemodel');
+var Judge = require('./models/judgemodel');
 var admin = require('./models/adminmodel');
+var Tournament = require('./models/tournamentmodel');
 
 
-app.use('javascripts/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(statics(path.join(__dirname, '/public')));
+app.use('javascripts/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
+app.use(static(path.join(__dirname, '/public')));
 
 
 
@@ -46,20 +34,6 @@ db.once('open', function () {
   console.log("connected to mongodb");
 });
 
-//------------------------------------PASSPORT----------------------------
-app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(bodyParser());
-
-app.set('view engine', 'ejs');
-
-// required for passport
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.use(flash());
-
-//require('./app/routes.js')(app, passport);
 
 //-------------------------------------SOCKET------------------------------
 //-------------------------------------HORSE----------------------------------
@@ -81,6 +55,42 @@ socket.on("RefreshList", function(){
     });
   });
 });
+
+    socket.on("newJudge", function(newJudge){
+        var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
+        jj.save(function () {
+
+        });
+    });
+
+
+
+    socket.on("RefreshJudgeList", function(){
+       Judge.find({},function(err, judges) {
+            judges.forEach(function(judge1) {
+                var judgetemp = {name:judge1.name, surname:judge1.surname, code:judge1.code};
+                io.emit("addingJudge", judgetemp);
+            });
+        });
+    });
+
+    socket.on("newTournament", function(newTournament){
+        var jj = new Tournament({name:newTournament.name, city:newTournament.city, number:newTournament.number, horses:newTournament.horses, judges:newTournament.judges});
+        jj.save(function () {
+
+        });
+    });
+
+
+
+    // socket.on("RefreshTournamentList", function(){
+    //     Judge.find({},function(err, judges) {
+    //         judges.forEach(function(judge1) {
+    //             var judgetemp = {name:judge1.name, surname:judge1.surname, code:judge1.code};
+    //             io.emit("addingJudge", judgetemp);
+    //         });
+    //     });
+    // });
 });
 
 //-------------------------------------ROUTES-------------------------------
@@ -98,3 +108,4 @@ httpServer.listen(port, function () {
   console.log('Server listen on port ' + port+'!');
 });
 module.exports = app;
+// connect roles express

@@ -78,7 +78,7 @@
                         <h2 style="text-align: center">Tournament List</h2>
                     </div>
 
-                    <table class="table table-bordered">
+                    <table id="TournamentListTable" class="table table-bordered">
                         <thead>
                         <tr>
                             <th class="col-md-2">Name</th>
@@ -141,7 +141,7 @@
                             <h2 style="text-align: center">Judge List</h2>
                         </div>
 
-                        <table class="table table-bordered">
+                        <table id="JudgeListTable" class="table table-bordered">
                             <thead>
                             <tr>
                                 <th class="col-md-2">Name</th>
@@ -158,9 +158,9 @@
                                 <td>test</td>
                                 <td>test</td>
                                 <td>test</td>
-                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Add to next tournament</button></td>
-                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Edit Judge</button></td>
-                                <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete</button></td>
+                                <td><button type="button" class="btn btn-default" >Add to next tournament</button></td>
+                                <td><button type="button" class="btn btn-default" >Edit Judge</button></td>
+                                <td><button id="deleteJudgeButton" type="button" class="btn btn-default" >Delete</button></td>
                             </tr>
 
 
@@ -186,25 +186,25 @@
                             <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="sexInput">
                             <label for="OwnerInput">Owner:</label>
                             <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="ownerInput">
-                            <button id="addHorseButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
+                            <button id="addHorseButton" style="margin-top:20px" type="button"  class="btn btn-default">Create</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-            <div>
+            <div id="addJudge">
                 <div style="padding:20px" class="navbar navbar-default">
                     <h2 style="text-align: center;">New Judge</h2>
                     <div id="newjudgeContent">
                         <div class="text-center">
                             <div class="form-group">
-                                <label for="judgenameInput">Name:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="judgenameInput">
-                                <label for="judgesurnameInput">Surname:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="judgesurnameInput">
-                                <label for="judgecodeInput">Code:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="judgecodeInput">
-                                <button id="newjudgeButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
+                                <label for="JudgeNameInput">Name:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="JudgeNameInput">
+                                <label for="JudgeSurnameInput">Surname:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="JudgeSurnameInput">
+                                <label for="JudgeCodeInput">Code:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="JudgeCodeInput">
+                                <button id="NewJudgeButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>
                     </div>
@@ -217,13 +217,13 @@
                     <div id="newtournamentContent">
                         <div class="text-center">
                             <div class="form-group">
-                                <label for="tournamentnameInput">Name:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="tournamentnameInput">
-                                <label for="tournamentcityInput">City:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="tournamentcityInput">
-                                <label for="tournamentidInput">Unique number:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="tournamentidInput">
-                                <button id="newtournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
+                                <label for="TournamentNameInput">Name:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentNameInput">
+                                <label for="TournamentCityInput">City:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="TournamentCityInput">
+                                <label for="TournamentIdInput">Unique number:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentIdInput">
+                                <button id="NewTournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>
                         <div style="margin-top:30px;padding:30px" class="navbar navbar-default">
