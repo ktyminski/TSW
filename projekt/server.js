@@ -12,6 +12,37 @@ var port = process.env.PORT || 3000;
 var static = require('serve-static');
 var io = require("socket.io")(httpServer);
 
+var passport = require('passport');
+var flash    = require('connect-flash');
+
+var morgan       = require('morgan');
+var cookieParser = require('cookie-parser');
+var session      = require('express-session');
+
+var configDB = require('./config/database.js');
+
+
+
+require('./config/passport')(passport);
+
+
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(bodyParser.json()); // get information from html forms
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+
+app.set('view engine', 'ejs');
+
+// required for passport
+app.use(session({ secret: 'xxx' }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+
+
 
 var Horse = require('./models/horsemodel');
 var Judge = require('./models/judgemodel');
@@ -95,14 +126,15 @@ socket.on("RefreshList", function(){
 
 //-------------------------------------ROUTES-------------------------------
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/public/index.ejs');
 });
 app.get('/admin', function (req, res) {
-  res.sendFile(__dirname + '/public/admin.html');
+  res.sendFile(__dirname + '/public/admin.ejs');
 });
 app.get('/judge', function (req, res) {
-  res.sendFile(__dirname + '/public/judge.html');
+  res.sendFile(__dirname + '/public/judge.ejs');
 });
+require('./routes/routes.js')(app, passport);
 
 httpServer.listen(port, function () {
   console.log('Server listen on port ' + port+'!');

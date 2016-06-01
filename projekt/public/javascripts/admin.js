@@ -1,6 +1,8 @@
 /**
  * Created by Karol on 30.05.2016.
  */
+/*jshint browser: true, globalstrict: true, devel: true */
+/*global io: false */
 $(function(){
 
 
@@ -72,11 +74,11 @@ $(function(){
     //
     //         actualjudgelist.push(judgetemp.name);
     //     }
-     
+
 
     $("#NewTournamentButton").click( function ()
     {
-        var newTournament = {name:$("#JudgeNameInput").val(), city:$("#JudgeSurnameInput").val(), number:$("#JudgeCodeInput").val(), horses:$("#TournamentHorseInput"), judges:$("#TournamentJudgeInput")};
+        var newTournament = {name:$("#TournamentNameInput").val(), city:$("#TournamentCityInput").val(), number:$("#TournamentIdInput").val(), horses:$("#TournamentHorseInput"), judges:$("#TournamentJudgeInput")};
         socket.emit("newTournament", newTournament);
         socket.emit('RefreshTournamentList');
 
