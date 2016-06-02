@@ -86,10 +86,23 @@ socket.on("RefreshList", function(){
     });
   });
 });
+    socket.on("RefreshJudgeList", function(){
+        Judge.find({},function(err, judges) {
+            judges.forEach(function(judge1) {
+                var judgetemp = {code:judge1.code, name:judge1.name, surname:judge1.surname};
+                io.emit("addingJudge", judgetemp);
+            });
+        });
+    });
 
     socket.on("UpdateHorse", function(UpdateHorse){
          Horse.findOneAndUpdate({"name": UpdateHorse.id},{"name": UpdateHorse.name, "sex": UpdateHorse.sex, "owner": UpdateHorse.owner}, {new: true}, function(){});
         io.emit("deletedHorse");
+
+    });
+    socket.on("UpdateJudge", function(UpdateJudge){
+       Judge.findOneAndUpdate({"code": UpdateJudge.id},{"code":UpdateJudge.code, "name": UpdateJudge.name, "surname": UpdateJudge.surname}, {new: true}, function(){});
+        io.emit("deletedJudge");
 
     });
 
@@ -110,14 +123,7 @@ socket.on("RefreshList", function(){
 
 
 
-    socket.on("RefreshJudgeList", function(){
-       Judge.find({},function(err, judges) {
-            judges.forEach(function(judge1) {
-                var judgetemp = {code:judge1.code, name:judge1.name, surname:judge1.surname};
-                io.emit("addingJudge", judgetemp);
-            });
-        });
-    });
+
 
     socket.on("newTournament", function(newTournament){
         var jj = new Tournament({name:newTournament.name, city:newTournament.city, number:newTournament.number, horses:newTournament.horses, judges:newTournament.judges});
