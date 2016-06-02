@@ -5,9 +5,10 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Judge = new Schema({
+    code: {type: String, unique: true },
     name: String,
-    surname: String,
-    code: {type: String, unique: true }
+    surname: String
+
 });
 
 module.exports = mongoose.model('judge', Judge);

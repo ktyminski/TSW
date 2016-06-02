@@ -87,6 +87,12 @@ socket.on("RefreshList", function(){
   });
 });
 
+    socket.on("UpdateHorse", function(UpdateHorse){
+         Horse.findOneAndUpdate({"name": UpdateHorse.id},{"name": UpdateHorse.name, "sex": UpdateHorse.sex, "owner": UpdateHorse.owner}, {new: true}, function(){});
+        io.emit("deletedHorse");
+
+    });
+
     socket.on("newJudge", function(newJudge){
         var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
         jj.save(function () {
@@ -107,7 +113,7 @@ socket.on("RefreshList", function(){
     socket.on("RefreshJudgeList", function(){
        Judge.find({},function(err, judges) {
             judges.forEach(function(judge1) {
-                var judgetemp = {name:judge1.name, surname:judge1.surname, code:judge1.code};
+                var judgetemp = {code:judge1.code, name:judge1.name, surname:judge1.surname};
                 io.emit("addingJudge", judgetemp);
             });
         });

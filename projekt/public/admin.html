@@ -84,6 +84,7 @@
                             <th class="col-md-2">Name</th>
                             <th class="col-md-2">City</th>
                             <th class="col-md-2">Number</th>
+                            <th class="col-md-2">Groups</th>
                             <th class="col-md-1"></th>
                             <th class="col-md-1"></th>
 
@@ -92,6 +93,7 @@
                         <tbody>
 
                         <tr>
+                            <td>test</td>
                             <td>test</td>
                             <td>test</td>
                             <td>test</td>
@@ -144,9 +146,9 @@
                         <table id="JudgeListTable" class="table table-bordered">
                             <thead>
                             <tr>
+                                <th class="col-md-2">Code</th>
                                 <th class="col-md-2">Name</th>
                                 <th class="col-md-2">Surname</th>
-                                <th class="col-md-2">Code</th>
                                 <th class="col-md-1"></th>
                                 <th class="col-md-1"></th>
                                 <th class="col-md-1"></th>
@@ -193,12 +195,12 @@
                     <div id="newjudgeContent">
                         <div class="text-center">
                             <div class="form-group">
+                                <label for="JudgeCodeInput">Code:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="JudgeCodeInput">
                                 <label for="JudgeNameInput">Name:</label>
                                 <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="JudgeNameInput">
                                 <label for="JudgeSurnameInput">Surname:</label>
                                 <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="JudgeSurnameInput">
-                                <label for="JudgeCodeInput">Code:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="JudgeCodeInput">
                                 <button id="NewJudgeButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>
@@ -206,26 +208,79 @@
                 </div>
             </div>
 
+<div style="padding:20px" class="navbar navbar-default">
+    <h2 style="text-align: center;">New Tournament</h2>
+    <div id="newTournamentContent">
+        <div class="text-center">
+            <div class="form-group">
+                <label for="TournamentNameInput">Name:</label>
+                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentNameInput">
+                <label for="TournamentCityInput">City:</label>
+                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="TournamentCityInput">
+                <label for="TournamentIdInput">Unique number:</label>
+                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentIdInput">
+                <button id="NewTournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
+            </div>
+        </div>
+        <div style="margin-top:30px;padding:30px" class="navbar navbar-default">
+
+            <div class="horselistgroupContent">
+
+                <h2 style="text-align: center">Groups to new tournament</h2>
+            </div>
+
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-md-2">Name</th>
+                    <th class="col-md-2">Type</th>
+                    <th class="col-md-2">Horses</th>
+                    <th class="col-md-2">Judges</th>
+                    <th class="col-md-1"></th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                    <td>test</td>
+                    <td><button type="button" class="btn btn-default" >Delete from tournament</button></td>
+                </tr>
+
+
+
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+</div>
+
+
             <div>
                 <div style="padding:20px" class="navbar navbar-default">
-                    <h2 style="text-align: center;">New Tournament</h2>
-                    <div id="newtournamentContent">
+                    <h2 style="text-align: center;">New Group</h2>
+                    <div id="newgroupContent">
                         <div class="text-center">
                             <div class="form-group">
-                                <label for="TournamentNameInput">Name:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentNameInput">
-                                <label for="TournamentCityInput">City:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="TournamentCityInput">
-                                <label for="TournamentIdInput">Unique number:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentIdInput">
-                                <button id="NewTournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
+                                <label for="GroupNameInput">Name:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="GroupNameInput">
+                                <label for="GroupTypeInput">Type:</label>
+                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="GroupTypeInput">
+
+                                <button id="NewGroupButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>
                         <div style="margin-top:30px;padding:30px" class="navbar navbar-default">
 
-                            <div class="horselisttournamentContent">
+                            <div class="horselistgroupContent">
 
-                                <h2 style="text-align: center">Horses ready for tournament</h2>
+                                <h2 style="text-align: center">Horses to new group</h2>
                             </div>
 
                             <table class="table table-bordered">
@@ -244,7 +299,7 @@
                                     <td>test</td>
                                     <td>test</td>
                                     <td>test</td>
-                                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete from tournament</button></td>
+                                    <td><button type="button" class="btn btn-default" >Delete from group</button></td>
                                 </tr>
 
 
@@ -255,17 +310,17 @@
 
 
 
-                            <div class="judgelisttournamentContent">
+                            <div class="judgelisttgroupContent">
 
-                                <h2 style="text-align: center">Judges ready for tournament</h2>
+                                <h2 style="text-align: center">Judges to new group</h2>
                             </div>
 
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
+                                    <th class="col-md-2">Code</th>
                                     <th class="col-md-2">Name</th>
                                     <th class="col-md-2">Surname</th>
-                                    <th class="col-md-2">Code</th>
                                     <th class="col-md-1"></th>
 
                                 </tr>
@@ -276,7 +331,7 @@
                                     <td>test</td>
                                     <td>test</td>
                                     <td>test</td>
-                                    <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete from tournament</button></td>
+                                    <td><button type="button" class="btn btn-default"  >Delete from group</button></td>
                                 </tr>
 
 
@@ -285,9 +340,11 @@
                             </table>
                         </div>
                     </div>
+                    </div>
+
                 </div>
-            </div>
-    </div>
+
+
 
 
 

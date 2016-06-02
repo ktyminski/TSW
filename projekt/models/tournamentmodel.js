@@ -8,8 +8,7 @@ var Tournament = new Schema({
     name: String,
     city: String,
     number: {type: String, unique: true},
-    horses: [],
-    judges: []
+    groups: []
 });
 
 module.exports = mongoose.model('tournament', Tournament);
