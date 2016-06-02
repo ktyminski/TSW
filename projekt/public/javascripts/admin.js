@@ -1,8 +1,7 @@
 /**
  * Created by Karol on 30.05.2016.
  */
-/*jshint browser: true, globalstrict: true, devel: true */
-/*global io: false */
+
 $(function(){
 
 
@@ -17,31 +16,46 @@ $(function(){
 
     socket.emit('RefreshList');
     socket.emit('RefreshJudgeList');
-    
-    
+
+
     socket.on("addingHorse", function(horsetemp) {
 
         if ($.inArray(horsetemp.name, actualhorselist) !== -1) {
 
         }
         else {
-            $('#HorseListTable').append('<tr><td>' + horsetemp.name + '</td><td>' + horsetemp.sex + '</td><td>' + horsetemp.owner + '</td> <td><button type="button" class="btn btn-default " >Add to next tournament</button></td> <td><button type="button" class="btn btn-default" >Edit Horse</button></td><td><button type="button" class="btn btn-default " >Delete</button></td></tr>');
-           
+            $('#HorseListTable').append('<tr><td>' + horsetemp.name + '</td><td>' + horsetemp.sex + '</td><td>' + horsetemp.owner + '</td> <td><button type="button" class="btn btn-default " >Add to next tournament</button></td> <td><button type="button" class="btn btn-default" >Edit Horse</button></td><td><button type="button" id="DeleteHorseButton" onclick="function () {  }" class="btn btn-default " >Delete</button></td></tr>');
+
             actualhorselist.push(horsetemp.name);
         }
     });
 
     $("#addHorseButton").click( function () {
+
         var newHorse = {name:$("#nameInput").val(), sex:$("#sexInput").val(), owner:$("#ownerInput").val()};
         socket.emit("newHorse", newHorse);
         socket.emit('RefreshList');
 
 });
-    $("#deleteJudgeButton").click( function () {
-        var newJudge = {name:$("#JudgeNameInput").val(), surname:$("#JudgeSurnameInput").val(),code:$("#JudgeCodeInput").val()};
-        socket.emit("deleteJudge", newJudge);
+    $('#JudgeListTable').on('click', '#DeleteJudgeButton', function() {
+        var judgecode = $(this).closest('tr').find('td:eq(2)').text();
+        socket.emit("deleteJudge", judgecode);
+
+    });
+    socket.on("deletedJudge", function(){
+        $("#JudgeListTable tbody  tr").remove();
+        actualjudgelist = [];
         socket.emit('RefreshJudgeList');
-        alert("Deleted record");
+    });
+    $('#HorseListTable').on('click', '#DeleteHorseButton', function() {
+        var horsecode = $(this).closest('tr').find('td:eq(0)').text();
+        socket.emit("deleteHorse", horsecode);
+
+    });
+    socket.on("deletedHorse", function(){
+        $("#HorseListTable tbody  tr").remove();
+        actualhorselist = [];
+        socket.emit('RefreshHorseList');
     });
 
     socket.on("addingJudge", function(judgetemp) {
@@ -50,7 +64,7 @@ $(function(){
 
         }
         else {
-            $('#JudgeListTable').append('<tr><td>' + judgetemp.name + '</td><td>' + judgetemp.surname + '</td><td>' + judgetemp.code + '</td> <td><button type="button" class="btn btn-default " >Add to next tournament</button></td> <td><button type="button" class="btn btn-default" >Edit Judge</button></td><td><button type="button" class="btn btn-default " >Delete</button></td></tr>');
+            $('#JudgeListTable').append('<tr><td>' + judgetemp.name + '</td><td>' + judgetemp.surname + '</td><td>' + judgetemp.code + '</td> <td><button type="button" class="btn btn-default " >Add to next tournament</button></td> <td><button type="button" class="btn btn-default" >Edit Judge</button></td><td><button id ="DeleteJudgeButton" type="button" onclick="function () {  }" class="btn btn-default " >Delete</button></td></tr>');
 
             actualjudgelist.push(judgetemp.name);
         }

@@ -93,6 +93,14 @@ socket.on("RefreshList", function(){
 
         });
     });
+    socket.on("deleteJudge", function(judgecode) {
+        Judge.find({code: judgecode}).remove().exec();
+        io.emit("deletedJudge");
+    });
+    socket.on("deleteHorse", function(horsecode) {
+        Horse.find({name: horsecode}).remove().exec();
+        io.emit("deletedHorse");
+    });
 
 
 
@@ -125,19 +133,23 @@ socket.on("RefreshList", function(){
 });
 
 //-------------------------------------ROUTES-------------------------------
+
+
+
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.ejs');
+  res.sendFile(__dirname + '/public/index.html');
 });
+
 app.get('/admin', function (req, res) {
-  res.sendFile(__dirname + '/public/admin.ejs');
-});
-app.get('/judge', function (req, res) {
-  res.sendFile(__dirname + '/public/judge.ejs');
+  res.sendFile(__dirname + '/public/admin.html');
 });
 require('./routes/routes.js')(app, passport);
+app.get('/judge', function (req, res) {
+  res.sendFile(__dirname + '/public/judge.html');
+});
+
 
 httpServer.listen(port, function () {
   console.log('Server listen on port ' + port+'!');
 });
 module.exports = app;
-// connect roles express
