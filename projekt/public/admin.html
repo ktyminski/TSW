@@ -14,9 +14,9 @@
 
 
 <div class="btn-group-justified" role="group" aria-label="...">
-    <a href="/" class="btn btn-default">Spectator Panel</a>
-    <a href="/judge" class="btn btn-default">Jugde Panel</a>
-    <a href="/admin" class="btn btn-default">Admin Panel</a>
+    <a href="/" class="btn btn-info">Spectator Panel</a>
+    <a href="/judge" class="btn btn-warning">Jugde Panel</a>
+    <a href="/admin" class="btn btn-danger">Admin Panel</a>
 
 </div>
 
@@ -62,9 +62,9 @@
                             <td>test</td>
                             <td>test</td>
                             <td>test</td>
-                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Next Horse</button></td>
-                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Hurry judges</button></td>
-                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Close tournament</button></td>
+                            <td><button type="button" class="btn btn-default" >Next Horse</button></td>
+                            <td><button type="button" class="btn btn-default" >Hurry judges</button></td>
+                            <td><button type="button" class="btn btn-default " >Close tournament</button></td>
                         </tr>
 
 
@@ -74,17 +74,45 @@
                 </div>
 
                 <div id="TournamentList">
-                    <div class="tournamentlistContent">
-                        <h2 style="text-align: center">Tournament List</h2>
+                                    <div class="tournamentlistContent">
+                                        <h2 style="text-align: center">Tournament List</h2>
+                                    </div>
+
+                                    <table id="TournamentListTable" class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="col-md-2">Name</th>
+                                            <th class="col-md-2">City</th>
+                                            <th class="col-md-2">Groups</th>
+                                            <th class="col-md-1"></th>
+                                            <th class="col-md-1"></th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <tr>
+
+                                        </tr>
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="GroupList">
+                    <div class="grouplistContent">
+                        <h2 style="text-align: center">Group List</h2>
                     </div>
 
-                    <table id="TournamentListTable" class="table table-bordered">
+                    <table id="GroupListTable" class="table table-bordered">
                         <thead>
                         <tr>
                             <th class="col-md-2">Name</th>
-                            <th class="col-md-2">City</th>
-                            <th class="col-md-2">Number</th>
-                            <th class="col-md-2">Groups</th>
+                            <th class="col-md-2">Type</th>
+                            <th class="col-md-2">Horses</th>
+                            <th class="col-md-2">Judges</th>
                             <th class="col-md-1"></th>
                             <th class="col-md-1"></th>
 
@@ -93,12 +121,7 @@
                         <tbody>
 
                         <tr>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Start tournament</button></td>
-                            <td><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" >Delete tournament</button></td>
+
                         </tr>
 
 
@@ -283,7 +306,7 @@
                                 <h2 style="text-align: center">Horses to new group</h2>
                             </div>
 
-                            <table class="table table-bordered">
+                            <table id ="HorseGroupTable" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="col-md-2">Name</th>
@@ -296,10 +319,7 @@
                                 <tbody>
 
                                 <tr>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td><button type="button" class="btn btn-default" >Delete from group</button></td>
+
                                 </tr>
 
 
@@ -315,7 +335,7 @@
                                 <h2 style="text-align: center">Judges to new group</h2>
                             </div>
 
-                            <table class="table table-bordered">
+                            <table id="JudgeGroupTable" class="table table-bordered">
                                 <thead>
                                 <tr>
                                     <th class="col-md-2">Code</th>
@@ -328,10 +348,7 @@
                                 <tbody>
 
                                 <tr>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td>test</td>
-                                    <td><button type="button" class="btn btn-default"  >Delete from group</button></td>
+
                                 </tr>
 
 

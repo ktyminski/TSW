@@ -46,6 +46,7 @@ app.use(flash());
 
 var Horse = require('./models/horsemodel');
 var Judge = require('./models/judgemodel');
+var Group = require('./models/groupmodel');
 var admin = require('./models/adminmodel');
 var Tournament = require('./models/tournamentmodel');
 
@@ -77,6 +78,18 @@ io.sockets.on("connection", function (socket) {
 
     });
   });
+    socket.on("newJudge", function(newJudge){
+        var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
+        jj.save(function () {
+
+        });
+    });
+    socket.on("newGroup", function(newGroup){
+        var jj = new Group({name:newGroup.name, type:newGroup.type, horses:newGroup.horses, judges:newGroup.judges});
+        jj.save(function () {
+
+        });
+    });
 
 socket.on("RefreshList", function(){
   Horse.find({},function(err, horses) {
@@ -95,6 +108,15 @@ socket.on("RefreshList", function(){
         });
     });
 
+    socket.on("RefreshGroupList", function(){
+        Group.find({},function(err, groups) {
+           groups.forEach(function(group1) {
+                var grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
+                io.emit("addingGroup", grouptemp);
+            });
+        });
+    });
+
     socket.on("UpdateHorse", function(UpdateHorse){
          Horse.findOneAndUpdate({"name": UpdateHorse.id},{"name": UpdateHorse.name, "sex": UpdateHorse.sex, "owner": UpdateHorse.owner}, {new: true}, function(){});
         io.emit("deletedHorse");
@@ -106,12 +128,7 @@ socket.on("RefreshList", function(){
 
     });
 
-    socket.on("newJudge", function(newJudge){
-        var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
-        jj.save(function () {
 
-        });
-    });
     socket.on("deleteJudge", function(judgecode) {
         Judge.find({code: judgecode}).remove().exec();
         io.emit("deletedJudge");
@@ -120,13 +137,17 @@ socket.on("RefreshList", function(){
         Horse.find({name: horsecode}).remove().exec();
         io.emit("deletedHorse");
     });
+    socket.on("deleteGroup", function(groupcode) {
+        Group.find({name: groupcode}).remove().exec();
+        io.emit("deletedGroup");
+    });
 
 
 
 
 
     socket.on("newTournament", function(newTournament){
-        var jj = new Tournament({name:newTournament.name, city:newTournament.city, number:newTournament.number, horses:newTournament.horses, judges:newTournament.judges});
+        var jj = new Tournament({name:newTournament.name, city:newTournament.city, groups:newTournament.groups});
         jj.save(function () {
 
         });
