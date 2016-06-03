@@ -49,6 +49,7 @@ var Judge = require('./models/judgemodel');
 var Group = require('./models/groupmodel');
 var admin = require('./models/adminmodel');
 var Tournament = require('./models/tournamentmodel');
+var aTournament = require('./models/atournamentmodel');
 
 
 app.use('javascripts/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
@@ -90,6 +91,18 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
+    socket.on("newTournament", function(newTournament){
+        var jj = new Tournament({name:newTournament.name, city:newTournament.city, groups:newTournament.groups});
+        jj.save(function () {
+
+        });
+    });
+    socket.on("newaTournament", function(newaTournament){
+        var jj = new aTournament({name:newaTournament.name, city:newaTournament.city, groups:newaTournament.groups, actualgroup:newaTournament.actualgroup,  actualhorse:newaTournament.actualhorse});
+        jj.save(function () {
+
+        });
+    });
 
 socket.on("RefreshList", function(){
   Horse.find({},function(err, horses) {
@@ -117,14 +130,35 @@ socket.on("RefreshList", function(){
         });
     });
 
+    socket.on("RefreshTournamentList", function(){
+        Tournament.find({},function(err, groups) {
+            groups.forEach(function(tour1) {
+                var tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
+                io.emit("addingTournament", tournamenttemp);
+            });
+        });
+    });
+    socket.on("RefreshaTournamentList", function(){
+        aTournament.find({},function(err, groups) {
+            groups.forEach(function(tour1) {
+                var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse};
+                io.emit("addingaTournament", atournamenttemp);
+            });
+        });
+    });
+
     socket.on("UpdateHorse", function(UpdateHorse){
          Horse.findOneAndUpdate({"name": UpdateHorse.id},{"name": UpdateHorse.name, "sex": UpdateHorse.sex, "owner": UpdateHorse.owner}, {new: true}, function(){});
-        io.emit("deletedHorse");
+         io.emit("deletedHorse");
+       
+
 
     });
     socket.on("UpdateJudge", function(UpdateJudge){
        Judge.findOneAndUpdate({"code": UpdateJudge.id},{"code":UpdateJudge.code, "name": UpdateJudge.name, "surname": UpdateJudge.surname}, {new: true}, function(){});
         io.emit("deletedJudge");
+       
+
 
     });
 
@@ -141,28 +175,20 @@ socket.on("RefreshList", function(){
         Group.find({name: groupcode}).remove().exec();
         io.emit("deletedGroup");
     });
-
-
-
-
-
-    socket.on("newTournament", function(newTournament){
-        var jj = new Tournament({name:newTournament.name, city:newTournament.city, groups:newTournament.groups});
-        jj.save(function () {
-
-        });
+    socket.on("deleteTournament", function(tournamentcode) {
+        Tournament.find({name: tournamentcode}).remove().exec();
+        io.emit("deletedTournament");
     });
 
 
 
-    // socket.on("RefreshTournamentList", function(){
-    //     Judge.find({},function(err, judges) {
-    //         judges.forEach(function(judge1) {
-    //             var judgetemp = {name:judge1.name, surname:judge1.surname, code:judge1.code};
-    //             io.emit("addingJudge", judgetemp);
-    //         });
-    //     });
-    // });
+
+
+
+
+
+
+
 });
 
 //-------------------------------------ROUTES-------------------------------

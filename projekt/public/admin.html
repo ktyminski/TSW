@@ -45,12 +45,15 @@
                         <h1 style="text-align: center">Actual Tournaments</h1>
 
 
-                    <table class="table table-bordered">
+                    <table id ="aTournamentListTable" class="table table-bordered">
                         <thead>
                         <tr>
                             <th class="col-md-2">Title</th>
                             <th class="col-md-2">City</th>
-                            <th class="col-md-2">Unique number</th>
+                            <th class="col-md-2">Groups</th>
+                            <th class="col-md-1">Actual group</th>
+                            <th class="col-md-1">Actual horse</th>
+                            <th class="col-md-1"></th>
                             <th class="col-md-1"></th>
                             <th class="col-md-1"></th>
                             <th class="col-md-1"></th>
@@ -59,12 +62,7 @@
                         <tbody>
 
                         <tr>
-                            <td>test</td>
-                            <td>test</td>
-                            <td>test</td>
-                            <td><button type="button" class="btn btn-default" >Next Horse</button></td>
-                            <td><button type="button" class="btn btn-default" >Hurry judges</button></td>
-                            <td><button type="button" class="btn btn-default " >Close tournament</button></td>
+
                         </tr>
 
 
@@ -240,8 +238,7 @@
                 <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentNameInput">
                 <label for="TournamentCityInput">City:</label>
                 <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="TournamentCityInput">
-                <label for="TournamentIdInput">Unique number:</label>
-                <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="TournamentIdInput">
+
                 <button id="NewTournamentButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
             </div>
         </div>
@@ -252,7 +249,7 @@
                 <h2 style="text-align: center">Groups to new tournament</h2>
             </div>
 
-            <table class="table table-bordered">
+            <table id="GroupTournamentTable" class="table table-bordered">
                 <thead>
                 <tr>
                     <th class="col-md-2">Name</th>
@@ -266,11 +263,7 @@
                 <tbody>
 
                 <tr>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td>test</td>
-                    <td><button type="button" class="btn btn-default" >Delete from tournament</button></td>
+
                 </tr>
 
 
