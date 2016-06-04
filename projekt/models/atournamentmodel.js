@@ -5,12 +5,13 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var aTournament = new Schema({
-    name: String,
+    name: {type: String, unique: true},
     city: String,
-    number: {type: String, unique: true},
     groups: [],
-    actualgroup: Number,
-    actualhorse: Number
+    actualgroup: [],
+    actualhorse: [],
+    
+    
 });
 
 module.exports = mongoose.model('atournament', aTournament);

@@ -5,9 +5,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var Tournament = new Schema({
-    name: String,
+    name: {type: String, unique: true},
     city: String,
-    number: {type: String, unique: true},
     groups: []
 });
 

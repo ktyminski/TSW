@@ -72,6 +72,10 @@ db.once('open', function () {
 //-------------------------------------HORSE----------------------------------
 io.sockets.on("connection", function (socket) {
 
+    socket.on("deleteJudge", function(judgecode) {
+
+    });
+
 
   socket.on("newHorse", function(newHorse){
     var hh = new Horse({name:newHorse.name, sex:newHorse.sex, owner:newHorse.owner});
@@ -100,8 +104,8 @@ io.sockets.on("connection", function (socket) {
     socket.on("newaTournament", function(newaTournament){
         var jj = new aTournament({name:newaTournament.name, city:newaTournament.city, groups:newaTournament.groups, actualgroup:newaTournament.actualgroup,  actualhorse:newaTournament.actualhorse});
         jj.save(function () {
-
         });
+       
     });
 
 socket.on("RefreshList", function(){
@@ -131,16 +135,16 @@ socket.on("RefreshList", function(){
     });
 
     socket.on("RefreshTournamentList", function(){
-        Tournament.find({},function(err, groups) {
-            groups.forEach(function(tour1) {
+        Tournament.find({},function(err, tournaments) {
+            tournaments.forEach(function(tour1) {
                 var tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
                 io.emit("addingTournament", tournamenttemp);
             });
         });
     });
     socket.on("RefreshaTournamentList", function(){
-        aTournament.find({},function(err, groups) {
-            groups.forEach(function(tour1) {
+        aTournament.find({},function(err, atours) {
+            atours.forEach(function(tour1) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse};
                 io.emit("addingaTournament", atournamenttemp);
             });
@@ -157,10 +161,16 @@ socket.on("RefreshList", function(){
     socket.on("UpdateJudge", function(UpdateJudge){
        Judge.findOneAndUpdate({"code": UpdateJudge.id},{"code":UpdateJudge.code, "name": UpdateJudge.name, "surname": UpdateJudge.surname}, {new: true}, function(){});
         io.emit("deletedJudge");
-       
-
-
     });
+
+        socket.on("UpdateaTournament", function(Updateatourn){
+
+                aTournament.findOneAndUpdate({"name": Updateatourn.name}, {"actualgroup": Updateatourn.actualgroup, "actualhorse": Updateatourn.actualhorse}, {new: true}, function () {});
+                io.emit("deletedaTournament");
+
+
+
+        });
 
 
     socket.on("deleteJudge", function(judgecode) {
@@ -179,10 +189,59 @@ socket.on("RefreshList", function(){
         Tournament.find({name: tournamentcode}).remove().exec();
         io.emit("deletedTournament");
     });
+    socket.on("deleteaTournament", function(tournamentcode) {
+        Tournament.find({name: tournamentcode}).remove().exec();
+        io.emit("deletedaTournament");
+    });
 
 
+socket.on("AddRecords", function(name,city,groups){
+    var tournamenttemp;
+    var tourgroup;
+    var tourhorse;
+    var tourjudge;
+    var grouptemp;
 
+    console.log(groups);
+    console.log(typeof groups);
+    var str = groups.split(",");
 
+    async.series([
+        function(callback1) {
+            Tournament.find( { name: name },function(err, tournaments) {
+                tournaments.forEach(function(tour1) {
+                    tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
+                    tourgroup=(tour1.groups);
+                });
+            });
+            callback1();
+        },
+        function(callback2) {
+
+            Group.find({name:str[0]},function(err, groups) {
+                groups.forEach(function(group1) {
+
+                    grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
+                    if (tourgroup.indexOf(group1.horses) > -1) {
+                        //tourhorse.push(grouptemp.horses);
+                    } else {
+                        tourhorse=(grouptemp.horses);
+                        tourjudge=(grouptemp.judges);
+                    }
+                });
+
+                callback2();
+            });
+
+        }
+    ], function(err) {
+        if (err) {
+            throw err;
+        }
+        io.emit("FinalAddingTour",name,city,groups, tourgroup, tourhorse, tourjudge);
+
+    });
+});
 
 
 
