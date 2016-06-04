@@ -202,8 +202,7 @@ socket.on("AddRecords", function(name,city,groups){
     var tourjudge;
     var grouptemp;
 
-    console.log(groups);
-    console.log(typeof groups);
+   
     var str = groups.split(",");
 
     async.series([
@@ -223,7 +222,7 @@ socket.on("AddRecords", function(name,city,groups){
 
                     grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
                     if (tourgroup.indexOf(group1.horses) > -1) {
-                        //tourhorse.push(grouptemp.horses);
+
                     } else {
                         tourhorse=(grouptemp.horses);
                         tourjudge=(grouptemp.judges);
@@ -237,11 +236,145 @@ socket.on("AddRecords", function(name,city,groups){
     ], function(err) {
         if (err) {
             throw err;
+
         }
-        io.emit("FinalAddingTour",name,city,groups, tourgroup, tourhorse, tourjudge);
+       
+        io.emit("FinalAddingTour",name,city,groups, tourgroup[0], tourhorse[0], tourjudge);
 
     });
 });
+    socket.on("NextActualGroup", function(name,city,groups,actualgroup,actualhorse) {
+        var tournamenttemp;
+        var tourgroup;
+        var tourhorse;
+        var tourjudge;
+        var grouptemp;
+        var str = groups.split(",");
+        var info =str.length;
+
+        if(actualgroup === str[info-1] ){
+
+        }else {
+            for (i = 0; i < info; i++) {
+                if (actualgroup == str[i]) {
+                    actualgroup = str[i + 1];
+                    break;
+                }
+            }
+
+            async.series([
+                function (callback1) {
+                    aTournament.find({name: name}, function (err, tournaments) {
+                        tournaments.forEach(function (tour1) {
+                            tournamenttemp = {
+                                name: tour1.name,
+                                city: tour1.city,
+                                groups: tour1.groups,
+                                actualgroup: tour1.actualgroup,
+                                actualhorse: tour1.actualhorse
+                            };
+                            tourgroup = (tournamenttemp.groups);
+                        });
+                    });
+                    callback1();
+                },
+                function (callback2) {
+
+                    Group.find({name: actualgroup}, function (err, groups) {
+                        groups.forEach(function (group1) {
+
+                            grouptemp = {
+                                name: group1.name,
+                                type: group1.type,
+                                horses: group1.horses,
+                                judges: group1.judges
+                            };
+                            if (tourgroup.indexOf(group1.horses) > -1) {
+
+                            } else {
+                                tourhorse = (grouptemp.horses);
+                                tourjudge = (grouptemp.judges);
+                            }
+                        });
+
+                        callback2();
+                    });
+
+                }
+            ], function (err) {
+                if (err) {
+                    throw err;
+                }
+                console.log(tourjudge);
+                io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
+
+            });
+            // var info =str.length;
+            //  if
+            //  console.log(info);
+
+        }
+    });
+    socket.on("NextActualHorse", function(name,city,groups,actualgroup,actualhorse){
+        var tournamenttemp;
+        var tourgroup;
+        var tourhorse=[];
+        var tourjudge;
+        var grouptemp;
+
+
+        async.series([
+            function(callback1) {
+                Tournament.find( { name: name },function(err, tournaments) {
+                    tournaments.forEach(function(tour1) {
+                        tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
+                        tourgroup=(tour1.groups);
+                    });
+                });
+                callback1();
+            },
+            function(callback2) {
+
+                Group.find({name:actualgroup},function(err, groups) {
+                    groups.forEach(function(group1) {
+
+                        grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
+                        if (tourgroup.indexOf(group1.horses) > -1) {
+
+                        } else {
+                            tourhorse=(grouptemp.horses);
+                            tourjudge=(grouptemp.judges);
+                        }
+                    });
+
+                    callback2();
+                });
+
+            }
+        ], function(err) {
+            if (err) {
+                throw err;
+
+
+            }
+
+            var info =tourhorse.length;
+
+            if(actualhorse === tourhorse[info-1] ){
+
+            }else {
+                for (i=0; i < info; i++) {
+                    if (actualhorse == tourhorse[i]) {
+                        actualhorse = tourhorse[i + 1];
+                        break;
+                    }
+                }
+            }
+            console.log(tourjudge);
+            io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
+
+        });
+    });
 
 
 
