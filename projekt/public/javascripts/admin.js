@@ -281,6 +281,7 @@ $(function(){
             $('#aTournamentListTable').append('<tr><td>' + atourtemp.name + '</td><td>' + atourtemp.city + '</td><td>' + atourtemp.groups + '</td> <td>' + atourtemp.actualgroup + '</td><td>' + atourtemp.actualhorse + '</td><td><button type="button" id="#addHorseGroupButton'+atourtemp.name+'" class="btn btn-info " >Next group</button></td> <td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Next Horse</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-danger " >Hurry Judges</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-success " >Close tournament</button></td></tr>');
 
             actualatournamentlist.push(atourtemp.name);
+           
         }
     });
 //////////////////////////////////////////////////////////////////////////////////////////////wyswietlanie u admina aktualnych grup i koni
@@ -353,32 +354,6 @@ $(function(){
         var UpdateaTournament = {name:name, actualgroup:actualgroup, actualhorse:tourhorse };
         socket.emit("UpdateaTournament", UpdateaTournament);
     });
-
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

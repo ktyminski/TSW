@@ -48,6 +48,7 @@ var Horse = require('./models/horsemodel');
 var Judge = require('./models/judgemodel');
 var Group = require('./models/groupmodel');
 var admin = require('./models/adminmodel');
+var Rating = require('./models/ratingmodel')
 var Tournament = require('./models/tournamentmodel');
 var aTournament = require('./models/atournamentmodel');
 
@@ -139,6 +140,16 @@ socket.on("RefreshList", function(){
             tournaments.forEach(function(tour1) {
                 var tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
                 io.emit("addingTournament", tournamenttemp);
+            });
+        });
+    });
+
+    socket.on("RefreshJudgePanel", function(tourjudge){
+      
+        aTournament.find({},function(err, panels) {
+            panels.forEach(function(tour1) {
+                var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse};
+                io.emit("addingJudgePanel", atournamenttemp,tourjudge);
             });
         });
     });
@@ -240,6 +251,8 @@ socket.on("AddRecords", function(name,city,groups){
         }
        
         io.emit("FinalAddingTour",name,city,groups, tourgroup[0], tourhorse[0], tourjudge);
+       // io.emit("RefreshingJudge",tourjudge);
+        io.emit("CheckJudge",tourjudge);
 
     });
 });
@@ -307,6 +320,8 @@ socket.on("AddRecords", function(name,city,groups){
                 }
                 console.log(tourjudge);
                 io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
+               // io.emit("RefreshingJudge");
+                io.emit("CheckJudge",tourjudge);
 
             });
             // var info =str.length;
@@ -366,19 +381,17 @@ socket.on("AddRecords", function(name,city,groups){
                 for (i=0; i < info; i++) {
                     if (actualhorse == tourhorse[i]) {
                         actualhorse = tourhorse[i + 1];
+                        io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
+                        io.emit("CheckJudge",tourjudge);
                         break;
+
                     }
                 }
             }
-            console.log(tourjudge);
-            io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
+
 
         });
     });
-
-
-
-
 
 
 });
