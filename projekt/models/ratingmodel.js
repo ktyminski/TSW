@@ -13,7 +13,7 @@ var Rating = new Schema({
     head: String,
     clog: String,
     legs: String,
-    movement: String
+    movement: String,
     
 });
 

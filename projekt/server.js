@@ -48,7 +48,7 @@ var Horse = require('./models/horsemodel');
 var Judge = require('./models/judgemodel');
 var Group = require('./models/groupmodel');
 var admin = require('./models/adminmodel');
-var Rating = require('./models/ratingmodel')
+var Rating = require('./models/ratingmodel');
 var Tournament = require('./models/tournamentmodel');
 var aTournament = require('./models/atournamentmodel');
 
@@ -84,6 +84,12 @@ io.sockets.on("connection", function (socket) {
 
     });
   });
+    socket.on("SendRating", function(ratings){
+        var hh = new Rating({title: ratings.string,tournament: ratings.tournament, group: ratings.group, horse: ratings.horse, judge: ratings.judge, type:ratings.type, head: ratings.head, clog:ratings.clog, legs:ratings.legs, movement:ratings.movement});
+        hh.save(function () {
+
+        });
+    });
     socket.on("newJudge", function(newJudge){
         var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
         jj.save(function () {
@@ -125,6 +131,15 @@ socket.on("RefreshList", function(){
             });
         });
     });
+    socket.on("RefreshScoreList", function(){
+        Rating.find({},function(err, ratings) {
+            ratings.forEach(function(rate1) {
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                io.emit("addingScore", ratingtemp);
+                console.log('nadaje');
+            });
+        });
+    });
 
     socket.on("RefreshGroupList", function(){
         Group.find({},function(err, groups) {
@@ -144,12 +159,14 @@ socket.on("RefreshList", function(){
         });
     });
 
-    socket.on("RefreshJudgePanel", function(tourjudge){
+    socket.on("RefreshJudgePanel", function(name, tourjudge){
       
         aTournament.find({},function(err, panels) {
             panels.forEach(function(tour1) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse};
-                io.emit("addingJudgePanel", atournamenttemp,tourjudge);
+                if (name === atournamenttemp.name) {
+                    io.emit("addingJudgePanel", atournamenttemp, tourjudge);
+                }
             });
         });
     });
@@ -252,7 +269,7 @@ socket.on("AddRecords", function(name,city,groups){
        
         io.emit("FinalAddingTour",name,city,groups, tourgroup[0], tourhorse[0], tourjudge);
        // io.emit("RefreshingJudge",tourjudge);
-        io.emit("CheckJudge",tourjudge);
+        io.emit("CheckJudge",name,tourjudge);
 
     });
 });
@@ -321,7 +338,7 @@ socket.on("AddRecords", function(name,city,groups){
                 console.log(tourjudge);
                 io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
                // io.emit("RefreshingJudge");
-                io.emit("CheckJudge",tourjudge);
+                io.emit("CheckJudge",name,tourjudge);
 
             });
             // var info =str.length;
@@ -382,7 +399,7 @@ socket.on("AddRecords", function(name,city,groups){
                     if (actualhorse == tourhorse[i]) {
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
-                        io.emit("CheckJudge",tourjudge);
+                        io.emit("CheckJudge",name,tourjudge);
                         break;
 
                     }
@@ -393,8 +410,69 @@ socket.on("AddRecords", function(name,city,groups){
         });
     });
 
+    socket.on("NextActualWarning", function(name,city,groups,actualgroup,actualhorse){
+        var tournamenttemp;
+        var tourgroup;
+        var tourhorse=[];
+        var tourjudge;
+        var grouptemp;
+
+
+        async.series([
+            function(callback1) {
+                Tournament.find( { name: name },function(err, tournaments) {
+                    tournaments.forEach(function(tour1) {
+                        tournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups};
+                        tourgroup=(tour1.groups);
+                    });
+                });
+                callback1();
+            },
+            function(callback2) {
+
+                Group.find({name:actualgroup},function(err, groups) {
+                    groups.forEach(function(group1) {
+
+                        grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
+                        if (tourgroup.indexOf(group1.horses) > -1) {
+
+                        } else {
+                            tourhorse=(grouptemp.horses);
+                            tourjudge=(grouptemp.judges);
+                        }
+                    });
+
+                    callback2();
+                });
+
+            }
+        ], function(err) {
+            if (err) {
+                throw err;
+
+
+            }
+
+            var info =tourhorse.length;
+
+            io.emit("Warning",name,tourjudge)
+              
+
+                    
+                
+            
+
+
+        });
+    });
+
 
 });
+
+
+
+
+
 
 //-------------------------------------ROUTES-------------------------------
 

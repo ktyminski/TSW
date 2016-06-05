@@ -315,6 +315,7 @@ $(function(){
 
     });
 ///////////////////////////////////////////aktualny tournament ///////////////konie
+    
     $('#aTournamentListTable').on('click', '.btn.btn-warning', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
@@ -323,6 +324,19 @@ $(function(){
         var actualgroup = $(this).closest('tr').find('td:eq(3)').text();
         var actualhorse = $(this).closest('tr').find('td:eq(4)').text();
         socket.emit("NextActualHorse",name, city, groups, actualgroup, actualhorse);
+
+
+    });
+
+
+    $('#aTournamentListTable').on('click', '.btn.btn-danger', function () {
+
+        var name = $(this).closest('tr').find('td:eq(0)').text();
+        var city = $(this).closest('tr').find('td:eq(1)').text();
+        var groups = $(this).closest('tr').find('td:eq(2)').text();
+        var actualgroup = $(this).closest('tr').find('td:eq(3)').text();
+        var actualhorse = $(this).closest('tr').find('td:eq(4)').text();
+        socket.emit("NextActualWarning",name, city, groups, actualgroup, actualhorse);
 
 
     });

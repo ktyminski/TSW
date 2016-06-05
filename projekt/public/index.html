@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <title>Spectator Site</title>
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="javascripts/index.js"></script>
+    <script src="socket.io.js"></script>
+    <script src="javascripts/sorttable.js"></script>
 </head>
 <body style="padding:4%">
 
@@ -26,13 +30,13 @@
 
 
 
-                <h2 style="text-align: center;">Horse List</h2>
-                <table class="table table-bordered">
+                <h2 style="text-align: center;">All Scores</h2>
+                <table id="ScoreTable"class="sortable table table-bordered">
                     <thead>
                     <tr>
-                        <th class="col-md-1">Name</th>
-                        <th class="col-md-1">Sex</th>
-                        <th class="col-md-1">Owner</th>
+                        <th class="col-md-1">Tournament</th>
+                        <th class="col-md-1">Group</th>
+                        <th class="col-md-1">Horse</th>
                         <th class="col-md-1">Type</th>
                         <th class="col-md-1">Head and Shoulder</th>
                         <th class="col-md-1">Clog</th>
@@ -43,19 +47,34 @@
                     </thead>
                     <tbody>
                     <tr>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>test</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
+
                     </tr>
 
 
                     </tbody>
                 </table>
+            <table id="CountedScoreTable" class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="col-md-1">Tournament</th>
+                    <th class="col-md-1">Group</th>
+                    <th class="col-md-1">Horse</th>
+                    <th class="col-md-1">Type</th>
+                    <th class="col-md-1">Head and Shoulder</th>
+                    <th class="col-md-1">Clog</th>
+                    <th class="col-md-1">Legs</th>
+                    <th class="col-md-1">Movement</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+
+                </tr>
+
+
+                </tbody>
+            </table>
             </div>
         </div>
 
