@@ -74,30 +74,19 @@ db.once('open', function () {
 io.sockets.on("connection", function (socket) {
 
     socket.on("RefreshScoreList", function(){
-        console.log("przechodze tutaj");
+      
         Rating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
                 var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
                 io.emit("addingScore", ratingtemp);
+                io.emit('counting', ratingtemp);
             });
 
 
         });
     });
-    socket.on("RefreshFinalScoreList", function(){
-        console.log("przechodze tutaj");
+    
 
-        Rating.find({},function(err, ratings) {
-            ratings.forEach(function(rate1) {
-                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-
-               io.emit("counting", ratingtemp);
-
-            });
-
-
-        });
-    });
 
 
 

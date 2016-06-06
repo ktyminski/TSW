@@ -37,7 +37,7 @@ $(function(){
         else {
 
             $('#HorseListTable').append('<tr><td>' + horsetemp.name + '</td><td>' + horsetemp.sex + '</td><td>' + horsetemp.owner + '</td> <td><button type="button" id="#addHorseGroupButton'+horsetemp.name+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Horse" id="EditHorseButton'+horsetemp.name+'"  class="btn btn-danger" ></button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-warning " >Delete</button></td></tr>');
-
+                
             actualhorselist.push(horsetemp.name);
         }
     });

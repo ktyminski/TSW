@@ -4,13 +4,14 @@
 
 $(function(){
     var actualscores=[];
+    var actualscoresfinal =[];
+    var finalscore=[];
     var socket;
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
     socket.emit('RefreshScoreList');
-    //socket.emit('RefreshFinalScoreList')
-
+    socket.emit('')
     socket.on("refr", function() {
         //$('#ScoreTable tbody  tr').remove();
 
@@ -23,7 +24,25 @@ $(function(){
         socket.emit('RefreshScoreList');
     });
     socket.on("counting", function(ratingtemp) {
-        //ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+
+
+        console.log(finalscore);
+
+
+
+                    if ($.inArray(ratingtemp._id, actualscoresfinal) !== -1) {
+
+                    }
+                    else {
+                        actualscoresfinal.push(ratingtemp._id);
+                        console.log(actualscoresfinal);
+
+
+                        $('#FinalScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
+                        finalscore.push(ratingtemp.tournament+ratingtemp.group+ratingtemp.horse);
+
+
+                    }
 
     });
 
