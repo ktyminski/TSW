@@ -73,12 +73,36 @@ db.once('open', function () {
 //-------------------------------------HORSE----------------------------------
 io.sockets.on("connection", function (socket) {
 
-    socket.on("deleteJudge", function(judgecode) {
+    socket.on("RefreshScoreList", function(){
+        console.log("przechodze tutaj");
+        Rating.find({},function(err, ratings) {
+            ratings.forEach(function(rate1) {
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                io.emit("addingScore", ratingtemp);
+            });
 
+
+        });
+    });
+    socket.on("RefreshFinalScoreList", function(){
+        console.log("przechodze tutaj");
+
+        Rating.find({},function(err, ratings) {
+            ratings.forEach(function(rate1) {
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+
+               io.emit("counting", ratingtemp);
+
+            });
+
+
+        });
     });
 
 
-  socket.on("newHorse", function(newHorse){
+
+
+    socket.on("newHorse", function(newHorse){
     var hh = new Horse({name:newHorse.name, sex:newHorse.sex, owner:newHorse.owner});
     hh.save(function () {
 
@@ -86,6 +110,7 @@ io.sockets.on("connection", function (socket) {
   });
     socket.on("SendRating", function(ratings){
         var hh = new Rating({title: ratings.string,tournament: ratings.tournament, group: ratings.group, horse: ratings.horse, judge: ratings.judge, type:ratings.type, head: ratings.head, clog:ratings.clog, legs:ratings.legs, movement:ratings.movement});
+        socket.emit('RefreshScoreList');
         hh.save(function () {
 
         });
@@ -128,15 +153,6 @@ socket.on("RefreshList", function(){
             judges.forEach(function(judge1) {
                 var judgetemp = {code:judge1.code, name:judge1.name, surname:judge1.surname};
                 io.emit("addingJudge", judgetemp);
-            });
-        });
-    });
-    socket.on("RefreshScoreList", function(){
-        Rating.find({},function(err, ratings) {
-            ratings.forEach(function(rate1) {
-                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                io.emit("addingScore", ratingtemp);
-                console.log('nadaje');
             });
         });
     });
@@ -467,8 +483,26 @@ socket.on("AddRecords", function(name,city,groups){
     });
 
 
-});
+    socket.on("deleteScores", function() {
 
+        async.series([
+            function(callback) {
+                Rating.find({}).remove().exec();    //To sie wykonuje, ale socket juz nie
+                callback();
+            },
+
+        ], function(err) {
+            io.emit('refrr');
+
+        });
+    });
+    
+    socket.on("newScores", function() {
+        io.emit('refr');
+    });
+
+
+});
 
 
 

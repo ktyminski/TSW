@@ -41,10 +41,10 @@ $(function() {
             }
         }
     });
-    
+
 
     socket.on("addingJudgePanel", function (temporary,tourjudge) {
-        
+
         for (i=0;i<tourjudge.length;i++)
         {
 
@@ -55,7 +55,7 @@ $(function() {
 
                     $('#JudgeTable').append('<tr><td>' + temporary.name + '</td><td>' + temporary.city + '</td><td>' + temporary.groups + '</td><td>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type' + temporary.name + '"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select><td><select id="head' + temporary.name + '"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select id="clog' + temporary.name + '"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select id="legs' + temporary.name + '"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select id="movement' + temporary.name + '"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><input id="rate" " class="btn btn-info" value="Proceed Ratings" type="button"></td></tr>');
 
-                
+
             }
         }
 
@@ -79,11 +79,14 @@ $(function() {
         var legs = $(this).closest('tr').find('td:eq(8) option:selected').val();
         var movement = $(this).closest('tr').find('td:eq(9) option:selected').val();
         var unique=tournament+group+horse+judge;
-        alert(unique);
         var ratings = {title:unique ,tournament: tournament, group: group, horse: horse, judge: judge, type:type, head:head, clog:clog, legs:legs, movement:movement};
         socket.emit("SendRating", ratings);
+        socket.emit("newScores");
+
         var button = "#rate";
         $(button).val("Rated").prop('disabled', true);
+
+     
 
     });
  });

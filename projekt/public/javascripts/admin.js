@@ -75,6 +75,10 @@ $(function(){
         socket.emit('RefreshList');
     });
 
+    $('#ClearScore').click( function () {
+        socket.emit('deleteScores');
+    });
+
     socket.on("addingJudge", function(judgetemp) {
 
         if ($.inArray(judgetemp.code, actualjudgelist) !== -1) {
