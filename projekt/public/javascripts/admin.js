@@ -54,6 +54,11 @@ $(function(){
         actualjudgelist = [];
         socket.emit('RefreshJudgeList');
     });
+    socket.on("deletedaTournament", function(){
+        $("#aTournamentListTable tbody  tr").remove();
+        actualatournamentlist = [];
+        socket.emit('RefreshaTournamentList');
+    });
     $('#JudgeListTable').on('click', '#DeleteJudgeButton', function() {
         var judgecode = $(this).closest('tr').find('td:eq(0)').text();
         socket.emit("deleteJudge", judgecode);
@@ -66,7 +71,12 @@ $(function(){
     });
     $('#HorseListTable').on('click', '#DeleteHorseButton', function() {
         var horsecode = $(this).closest('tr').find('td:eq(0)').text();
-        socket.emit("deleteHorse", horsecode);
+        socket.emit("deleteHorse", horsecode)
+    });
+
+        $('#aTournamentListTable').on('click', '.btn.btn-success', function() {
+            var horsecode = $(this).closest('tr').find('td:eq(0)').text();
+            socket.emit("deleteaTournament", horsecode);
 
     });
     socket.on("deletedHorse", function(){

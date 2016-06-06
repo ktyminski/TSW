@@ -2,6 +2,8 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
+var fs = require('fs');
+var https = require('https');
 var path = require('path');
 var httpServer = require("http").Server(app);
 var _=require('underscore');
@@ -10,7 +12,7 @@ var async = require('async');
 var waterfall = require('async-waterfall');
 var port = process.env.PORT || 3000;
 var static = require('serve-static');
-var io = require("socket.io")(httpServer);
+//var io = require("socket.io")(httpServer);
 
 var passport = require('passport');
 var flash    = require('connect-flash');
@@ -20,6 +22,17 @@ var cookieParser = require('cookie-parser');
 var session      = require('express-session');
 
 var configDB = require('./config/database.js');
+
+var options = {
+    key: fs.readFileSync('ssl/key.pem'),
+    cert: fs.readFileSync('ssl/crt.pem')
+};
+
+
+var serverPort = 443;
+
+var server = https.createServer(options, app);
+var io = require('socket.io')(server);
 
 
 
@@ -85,7 +98,7 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-    
+
 
 
 
@@ -223,7 +236,9 @@ socket.on("RefreshList", function(){
         io.emit("deletedTournament");
     });
     socket.on("deleteaTournament", function(tournamentcode) {
-        Tournament.find({name: tournamentcode}).remove().exec();
+        
+        aTournament.find({name: tournamentcode}).remove().exec();
+       
         io.emit("deletedaTournament");
     });
 
@@ -488,7 +503,8 @@ socket.on("AddRecords", function(name,city,groups){
     
     socket.on("newScores", function() {
         io.emit('refr');
-    });
+    })
+    
 
 
 });
@@ -502,7 +518,7 @@ socket.on("AddRecords", function(name,city,groups){
 
 
 app.get('/', function (req, res) {
-  res.sendFile(__dirname + '/public/index.html');
+  res.sendFile(__dirname + '/public/index.html');q
 });
 
 app.get('/admin', function (req, res) {
@@ -514,7 +530,11 @@ app.get('/judge', function (req, res) {
 });
 
 
-httpServer.listen(port, function () {
-  console.log('Server listen on port ' + port+'!');
+// httpServer.listen(port, function () {
+//   console.log('Server listen on port ' + port+'!');
+// });
+
+server.listen(serverPort, function() {
+    console.log('server up and running at %s port', serverPort);
 });
 module.exports = app;

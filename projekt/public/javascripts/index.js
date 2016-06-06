@@ -37,12 +37,26 @@ $(function(){
                         actualscoresfinal.push(ratingtemp._id);
                         console.log(actualscoresfinal);
 
-
-                        $('#FinalScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
                         finalscore.push(ratingtemp.tournament+ratingtemp.group+ratingtemp.horse);
+
+                        // for(i=0;i<finalscore.length;i++){
+                        var temptab;
+                             for(j=0;j<finalscore.length;j++) {
+                            temptab=finalscore[j];
+                            console.log(finalscore[j]);
+                            if (finalscore.includes(temptab)) {
+                                $('#FinalScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' + ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
+                                break;
+                            }
+                         }
+                        //
+                        // }
 
 
                     }
+
+
+
 
     });
 
