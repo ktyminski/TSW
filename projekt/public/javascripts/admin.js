@@ -49,6 +49,9 @@ $(function(){
         socket.emit('RefreshList');
 
 });
+    
+    
+    
     socket.on("deletedJudge", function(){
         $("#JudgeListTable tbody  tr").remove();
         actualjudgelist = [];
@@ -128,6 +131,8 @@ $(function(){
                 horses: horsetab,
                 judges: judgetab
             };
+            horsetab=[];
+            judgetab=[];
         socket.emit("newGroup", newGroup);
         socket.emit('RefreshGroupList');
     });
@@ -161,6 +166,7 @@ $(function(){
             groups: grouptab
 
         };
+        grouptab=[];
         socket.emit("newTournament", newTournament);
         socket.emit('RefreshTournamentList');
     });
