@@ -11,7 +11,6 @@ $(function(){
         socket = io({forceNew: true});
     }
     socket.emit('RefreshScoreList');
-    socket.emit('')
     socket.on("refr", function() {
         //$('#ScoreTable tbody  tr').remove();
 

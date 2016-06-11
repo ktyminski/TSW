@@ -316,10 +316,10 @@ $(function(){
         socket.on("FinalAddingTour", function(name,city,groups,tourgroup, tourhorse, tourjudge) {
 
 
-            var newaTournament = {name:name, city:city, groups:groups ,actualgroup:tourgroup, actualhorse:tourhorse};
+            var newaTournament = {name:name, city:city, groups:groups ,actualgroup:tourgroup, actualhorse:tourhorse, judges:tourjudge};
             socket.emit("newaTournament", newaTournament);
             socket.emit('RefreshaTournamentList');
-            socket.emit("JudgeMarks",tourjudge);
+           // socket.emit("JudgeMarks",tourjudge);
 
         });
         
@@ -377,7 +377,7 @@ $(function(){
         //var actualgroup =0;
         // var actualhorse =0;
 
-        var newaTournament = {name:name, city:city, groups:groups ,actualgroup:element, actualhorse:element2};
+        var newaTournament = {name:name, city:city, groups:groups ,actualgroup:element, actualhorse:element2, judges:tourjudge};
         socket.emit("newaTournament", newaTournament);
         socket.emit('RefreshaTournamentList');
 
@@ -385,7 +385,7 @@ $(function(){
 
     });
     socket.on("NextGroup",function(name,city,groups, actualgroup, tourhorse, tourjudge) {
-        var UpdateaTournament = {name:name, actualgroup:actualgroup, actualhorse:tourhorse };
+        var UpdateaTournament = {name:name, actualgroup:actualgroup, actualhorse:tourhorse, judges:tourjudge };
         socket.emit("UpdateaTournament", UpdateaTournament);
     });
 

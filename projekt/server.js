@@ -130,13 +130,11 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-    socket.on("SendRating", function(ratings){
-        var hh = new Rating({title: ratings.string,tournament: ratings.tournament, group: ratings.group, horse: ratings.horse, judge: ratings.judge, type:ratings.type, head: ratings.head, clog:ratings.clog, legs:ratings.legs, movement:ratings.movement});
-        socket.emit('RefreshScoreList');
-        hh.save(function () {
+   
+   
 
-        });
-    });
+
+
     socket.on("newJudge", function(newJudge){
         var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
         jj.save(function () {
@@ -156,7 +154,7 @@ io.sockets.on("connection", function (socket) {
         });
     });
     socket.on("newaTournament", function(newaTournament){
-        var jj = new aTournament({name:newaTournament.name, city:newaTournament.city, groups:newaTournament.groups, actualgroup:newaTournament.actualgroup,  actualhorse:newaTournament.actualhorse});
+        var jj = new aTournament({name:newaTournament.name, city:newaTournament.city, groups:newaTournament.groups, actualgroup:newaTournament.actualgroup,  actualhorse:newaTournament.actualhorse, judges:newaTournament.judges});
         jj.save(function () {
         });
 
@@ -201,9 +199,9 @@ io.sockets.on("connection", function (socket) {
 
         aTournament.find({},function(err, panels) {
             panels.forEach(function(tour1) {
-                var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse};
+                var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse ,judges:tour1.judges};
                 if (name === atournamenttemp.name) {
-                    io.emit("addingJudgePanel", atournamenttemp, tourjudge);
+                    io.emit("addingJudgePanel", atournamenttemp);
                 }
             });
         });
@@ -231,7 +229,7 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("UpdateaTournament", function(Updateatourn){
 
-        aTournament.findOneAndUpdate({"name": Updateatourn.name}, {"actualgroup": Updateatourn.actualgroup, "actualhorse": Updateatourn.actualhorse}, {new: true}, function () {});
+        aTournament.findOneAndUpdate({"name": Updateatourn.name}, {"actualgroup": Updateatourn.actualgroup, "actualhorse": Updateatourn.actualhorse, "judges": Updateatourn.judges}, {new: true}, function () {});
         io.emit("deletedaTournament");
 
 
@@ -307,7 +305,8 @@ io.sockets.on("connection", function (socket) {
 
             io.emit("FinalAddingTour",name,city,groups, tourgroup[0], tourhorse[0], tourjudge);
             // io.emit("RefreshingJudge",tourjudge);
-            io.emit("CheckJudge",name,tourjudge);
+          //  io.emit("CheckJudge",name,tourjudge);
+            io.emit("checkingJudge");
 
         });
     });
@@ -376,7 +375,7 @@ io.sockets.on("connection", function (socket) {
                 console.log(tourjudge);
                 io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
                 // io.emit("RefreshingJudge");
-                io.emit("CheckJudge",name,tourjudge);
+                io.emit("checkingJudge");
 
             });
             // var info =str.length;
@@ -437,7 +436,8 @@ io.sockets.on("connection", function (socket) {
                     if (actualhorse == tourhorse[i]) {
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
-                        io.emit("CheckJudge",name,tourjudge);
+                        //io.emit("CheckJudge",name,tourjudge);
+                        io.emit("checkingJudge");
                         break;
 
                     }
@@ -502,7 +502,7 @@ io.sockets.on("connection", function (socket) {
 
         async.series([
             function(callback) {
-                Rating.find({}).remove().exec();    //To sie wykonuje, ale socket juz nie
+                Rating.find({}).remove().exec();   
                 callback();
             },
 
@@ -516,8 +516,37 @@ io.sockets.on("connection", function (socket) {
         io.emit('refr');
     });
 
+    socket.on("CheckJudge", function (param) {
+        aTournament.find({},function(err, atours) {
+            atours.forEach(function(tour1) {
+                var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse , judges:tour1.judges};
+                io.emit("checkedJudge",param, atournamenttemp);
+            });
+        });
+
+    })
+
+
+
+    socket.on("NewRatingServer",function(ratingsnew)
+    {
+        var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
+        socket.emit('RefreshScoreList');
+        hh.save(function () {
+
+        });
+
+    });
+    socket.on("UpdateRatingServer", function(ratingsnew){
+        Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true}, function(){});
+        socket.emit('RefreshScoreList');
+
+    });
+
+
 
 });
+
 
 
 

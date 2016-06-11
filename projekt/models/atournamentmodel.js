@@ -10,6 +10,7 @@ var aTournament = new Schema({
     groups: [],
     actualgroup: [],
     actualhorse: [],
+    judges: [],
     
     
 });
