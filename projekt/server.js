@@ -81,27 +81,31 @@ db.once('open', function () {
 });
 
 
-var Logged = function() {
+var LoggedAdmin = function() {
     return function(req, res, next) {
         if(req.user){
+            if (req.user.role === 'admin')
                 next();
-
+            else
+                res.redirect('/unauthorized');
         }else
             res.redirect('/unauthorized2');
     };
 };
 
-// var userIsJudge = function() {
-//     return function(req, res, next) {
-//         if(req.user) {
-//             if (req.user.role === 'judge')
-//                 next();
-//             else
-//                 res.redirect('/unauthorized');
-//         }else
-//             res.redirect('/unauthorized2');
-//     };
-// };
+var LoggedJudge = function() {
+    return function(req, res, next) {
+        if(req.user) {
+            if (req.user.role === 'judge'){
+                next();
+                return req.user.username;
+            }
+            else
+                res.redirect('/unauthorized');
+        }else
+            res.redirect('/unauthorized2');
+    };
+};
 //-------------------------------------SOCKET------------------------------
 //-------------------------------------HORSE----------------------------------
 io.sockets.on("connection", function (socket) {
@@ -584,16 +588,20 @@ app.get('/unauthorized2', function (req, res) {
 });
 
 
-app.get('/register',Logged(), function(req, res) {
+app.get('/register',LoggedAdmin(), function(req, res) {
     res.render('register', { });
 });
+
+// app.get('/judge', LoggedJudge(), function (req, res) {
+//     res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});
+// });
 
 
 app.post('/login', passport.authenticate('local'), function(req, res) {
     res.redirect('/admin');
 });
 
-app.post('/register', Logged(), function(req, res) {
+app.post('/register', LoggedAdmin(), function(req, res) {
     Account.register(new Account({ username : req.body.username, role: req.body.role }), req.body.password, function(err, account) {
         if (err) {
             return res.render('register', { account : account });
@@ -616,7 +624,7 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/admin', Logged(), function (req, res) {
+app.get('/admin', LoggedAdmin(), function (req, res) {
     res.sendFile(__dirname + '/public/admin.html');
 });
 
