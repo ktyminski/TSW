@@ -12,18 +12,19 @@ $(function() {
     var socket;
     var actualstring;
 
-
-    
+    //logged as:
+    //alert($("#logged").text());
 
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
 
-    $("#LoginButton").click( function () {
-        param = $('#codeInput').val();
+
+        param = $("#logged").text();
+    console.log(param);
         socket.emit('CheckJudge', param);
 
-    });
+
     socket.on("checkingJudge", function () {
        socket.emit('CheckJudge', param);
     });

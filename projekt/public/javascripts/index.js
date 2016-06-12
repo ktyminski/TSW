@@ -22,14 +22,13 @@ $(function(){
     socket.on("refrr", function() {
         $('#ScoreTable tbody  tr').remove();
         $('#FinalScoreTable tbody  tr').remove();
+        countingarray=[];
 
         socket.emit('RefreshScoreList');
     });
     socket.on("counting", function(ratingtemp) {
 
-
-
-        if ($.inArray(ratingtemp._id, actualscoresfinal) !== -1) {
+                    if ($.inArray(ratingtemp._id, actualscoresfinal) !== -1) {
 
                     }
                     else {
@@ -75,15 +74,13 @@ $(function(){
 
 
     socket.on("addingScore", function(ratingtemp) {
-
-
-        if ($.inArray(ratingtemp._id, actualscores) !== -1) {
+        if ($.inArray(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ ratingtemp.type + ratingtemp.head+ ratingtemp.clog+ ratingtemp.legs+ ratingtemp.movement , actualscores) !== -1) {
 
         }
         else {
 
             $('#ScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
-            actualscores.push(ratingtemp._id);
+            actualscores.push(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ ratingtemp.type + ratingtemp.head+ ratingtemp.clog+ ratingtemp.legs+ ratingtemp.movement);
         }
     });
 

@@ -134,13 +134,11 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-   
-   
-
 
 
     socket.on("newJudge", function(newJudge){
         var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
+        Account.register(new Account({ username : newJudge.code, role: "judge" }), newJudge.surname, function(err, account) {});
         jj.save(function () {
 
         });
@@ -598,7 +596,7 @@ app.get('/register',LoggedAdmin(), function(req, res) {
 
 
 app.post('/login', passport.authenticate('local'), function(req, res) {
-    res.redirect('/admin');
+    res.redirect('/');
 });
 
 app.post('/register', LoggedAdmin(), function(req, res) {
@@ -628,8 +626,9 @@ app.get('/admin', LoggedAdmin(), function (req, res) {
     res.sendFile(__dirname + '/public/admin.html');
 });
 
-app.get('/judge', function (req, res) {
-    res.sendFile(__dirname + '/public/judge.html');
+app.get('/judge', LoggedJudge(), function (req, res) {
+   // res.sendFile(__dirname + '/public/judge.html');
+    res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});
 });
 
 
