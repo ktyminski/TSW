@@ -195,16 +195,28 @@ io.sockets.on("connection", function (socket) {
         });
     });
 
-    socket.on("RefreshJudgePanel", function(name, tourjudge){
+    socket.on("RefreshJudgePanel", function(name, atournamenttemp2 ,param){
 
         aTournament.find({},function(err, panels) {
             panels.forEach(function(tour1) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse ,judges:tour1.judges};
                 if (name === atournamenttemp.name) {
-                    io.emit("addingJudgePanel", atournamenttemp);
+                    var selectorposition;
+                    Rating.findOne({"tournament": atournamenttemp2.name, "group": atournamenttemp2.actualgroup, "horse":atournamenttemp2.actualhorse, "judge":param},function(err,found) {
+                        if(found){
+                            selectorposition = { type:found.type, head:found.head, clog:found.clog, legs:found.legs, movement:found.movement };
+                            io.emit("addingJudgePanel", atournamenttemp,selectorposition);
+                        }else{
+                            selectorposition = {type:"rate", head:"rate", clog:"rate", legs:"rate", movement:"rate" };
+                            io.emit("addingJudgePanel", atournamenttemp,selectorposition);
+                        }
+
+                    });
+
                 }
             });
         });
+
     });
     socket.on("RefreshaTournamentList", function(){
         aTournament.find({},function(err, atours) {
@@ -231,6 +243,7 @@ io.sockets.on("connection", function (socket) {
 
         aTournament.findOneAndUpdate({"name": Updateatourn.name}, {"actualgroup": Updateatourn.actualgroup, "actualhorse": Updateatourn.actualhorse, "judges": Updateatourn.judges}, {new: true}, function () {});
         io.emit("deletedaTournament");
+        io.emit("checkingJudge");
 
 
 
@@ -256,6 +269,7 @@ io.sockets.on("connection", function (socket) {
     socket.on("deleteaTournament", function(tournamentcode) {
         aTournament.find({name: tournamentcode}).remove().exec();
         io.emit("deletedaTournament");
+        io.emit("TournamentEnd");
     });
 
 
@@ -436,7 +450,6 @@ io.sockets.on("connection", function (socket) {
                     if (actualhorse == tourhorse[i]) {
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
-                        //io.emit("CheckJudge",name,tourjudge);
                         io.emit("checkingJudge");
                         break;
 
@@ -538,7 +551,7 @@ io.sockets.on("connection", function (socket) {
 
     });
     socket.on("UpdateRatingServer", function(ratingsnew){
-        Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true}, function(){});
+        Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true,upsert: true}, function(){});
         socket.emit('RefreshScoreList');
 
     });

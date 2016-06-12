@@ -6,7 +6,6 @@ var group;
 var horse;
 var param;
 var socket;
-var ifalreadyrated=[];
 
 $(function() {
 
@@ -14,16 +13,11 @@ $(function() {
     var actualstring;
 
 
-    $('#LoginButton').on('click', '.btn.btn-info', function() {
-
-    });
-
     
 
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
-    socket.emit('RefreshJudgePanel');
 
     $("#LoginButton").click( function () {
         param = $('#codeInput').val();
@@ -31,7 +25,7 @@ $(function() {
 
     });
     socket.on("checkingJudge", function () {
-       socket.emit('CheckJudge', param); 
+       socket.emit('CheckJudge', param);
     });
 
 
@@ -41,12 +35,17 @@ $(function() {
 
     
     socket.on("checkedJudge", function (param,atournamenttemp) {
+
+        $('#JudgeWarning').text("");
+
+
         name=atournamenttemp.name;
         for (i=0;i<atournamenttemp.judges.length;i++) {
 
             if (param === atournamenttemp.judges[i]) {
+                $('#LoggedAS').text(param);
 
-                socket.emit('RefreshJudgePanel', name, atournamenttemp.judges);
+                socket.emit('RefreshJudgePanel', name, atournamenttemp, param);
 
             }
         }
@@ -60,43 +59,39 @@ $(function() {
             }
         }
     });
-    
-    socket.on("NewRating", function(ratingsnew, ratingtemp){
-        ifalreadyrated.push(ratingsnew.tournament+ratingsnew.group+ratingsnew.horse+ratingsnew.judge);
-        console.log(ratingsnew);
-        console.log(ratingtemp);
-        if (ifalreadyrated===(ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge)){
-            socket.emit("UpdateRatingServer",ratingsnew);
-            socket.emit("newScores");
-            console.log("a");
-        }else{
-            socket.emit("NewRatingServer",ratingsnew);
-            console.log("b");
-            socket.emit("newScores");
-        }
+
+    socket.on("TournamentEnd", function (){
+        $("#JudgeTable tbody  tr").remove();
     });
 
 
-    socket.on("addingJudgePanel", function (temporary) {
 
+    socket.on("addingJudgePanel", function (temporary, positonselector) {
+        console.log(temporary);
+        console.log(positonselector);
         for (i=0;i<temporary.judges.length;i++)
         {
 
             if (param === temporary.judges[i]){
-                if (actualstring===temporary.name+temporary.groups+temporary.horses){
+                if (actualstring===temporary.name+temporary.actualgroup+temporary.actualhorse){
 
                     }else{
-
-                    $('#LoggedAS').text(param);
-                    $('#JudgeWarning').text("");
                     $("#JudgeTable tbody  tr").remove();
+
+                    $('#JudgeWarning').text("");
                     tournament=temporary.name;
                     group=temporary.actualgroup;
                     horse=temporary.actualhorse;
 
-                    $('#JudgeTable').append('<tr><td>' + temporary.name + '</td><td>' + temporary.city + '</td><td>' + temporary.groups + '</td><td>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="rate">rate</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="rate">rate</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="rate">rate</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="rate">rate</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="rate">rate</option><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
+                    $('#JudgeTable').append('<tr><td>' + temporary.name + '</td><td>' + temporary.city + '</td><td>' + temporary.groups + '</td><td>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
+                    $("#type").val(positonselector.type);
+                    $("#head").val(positonselector.head);
+                    $("#clog").val(positonselector.clog);
+                    $("#legs").val(positonselector.legs);
+                    $("#movement").val(positonselector.movement);
+
                     
-                    actualstring=temporary.name+temporary.groups+temporary.horses;
+                    actualstring=temporary.name+temporary.actualgroup+temporary.actualhorse;
                 }
             }
         }
@@ -140,12 +135,12 @@ function changedetected() {
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
-    var rate="rate";
-    if (ratings.type===rate||ratings.head===rate||ratings.clog===rate||ratings.legs===rate||ratings.movement===rate)
+    if (ratings.type===null||ratings.head===null||ratings.clog===null||ratings.legs===null||ratings.movement===null)
     {
     console.log("please mark all parameters");
     }else {
-        socket.emit("NewRatingServer", ratings);
+        socket.emit("UpdateRatingServer", ratings);
+        socket.emit("RefreshScoreList");
 
     }
 }

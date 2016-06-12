@@ -6,6 +6,8 @@ $(function(){
     var actualscores=[];
     var actualscoresfinal =[];
     var finalscore=[];
+    var counting;
+    var countingarray=[];
     var socket;
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
@@ -25,33 +27,46 @@ $(function(){
     });
     socket.on("counting", function(ratingtemp) {
 
-
-        console.log(finalscore);
-
-
-
                     if ($.inArray(ratingtemp._id, actualscoresfinal) !== -1) {
 
                     }
                     else {
                         actualscoresfinal.push(ratingtemp._id);
-                        console.log(actualscoresfinal);
                         if (finalscore.includes(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse)){
+                            console.log(ratingtemp.tournament,ratingtemp.group ,ratingtemp.horse);
+                            for (var i=0;i<countingarray.length;i++){
+                                if(countingarray[i].tournament+countingarray[i].group+countingarray[i].horse===ratingtemp.tournament + ratingtemp.group + ratingtemp.horse){
+                                    var value1=parseFloat(countingarray[i].type)+parseFloat(ratingtemp.type);
+                                    var value2=parseFloat(countingarray[i].head)+parseFloat(ratingtemp.head);
+                                    var value3=parseFloat(countingarray[i].clog)+parseFloat(ratingtemp.clog);
+                                    var value4=parseFloat(countingarray[i].legs)+parseFloat(ratingtemp.legs);
+                                    var value5=parseFloat(countingarray[i].movement)+parseFloat(ratingtemp.movement);
+                                    var all=value1+value2+value3+value4+value5;
+                                    countingarray[i].type=(value1);
+                                    countingarray[i].head=(value2);
+                                    countingarray[i].clog=(value3);
+                                    countingarray[i].legs=(value4);
+                                    countingarray[i].movement=(value5);
+                                    countingarray[i].all=(all);
+                                    countingarray[i].counter= countingarray[i].counter+1;
+                                    console.log(countingarray[i]);
+                                    console.log(countingarray.length);
+                                }
+                            }
 
                         }else{
+
+                            counting =({tournament:ratingtemp.tournament,group:ratingtemp.group, horse: ratingtemp.horse, type: ratingtemp.type ,head: ratingtemp.head , clog: ratingtemp.clog , legs: ratingtemp.legs ,movement: ratingtemp.movement,all:parseFloat(ratingtemp.type)+parseFloat(ratingtemp.head)+parseFloat(ratingtemp.clog)+parseFloat(ratingtemp.legs) +parseFloat(ratingtemp.movement), counter:1});
+                            countingarray.push(counting);
                             finalscore.push(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
-                            $('#FinalScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' + ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
 
                         }
-
-
-
-
-
                     }
+        $('#FinalScoreTable tbody  tr').remove();
+        for (var i=0;i<countingarray.length;i++){
+            $('#FinalScoreTable').append('<tr><td>' + (countingarray[i].tournament) + '</td><td>' +countingarray[i].group + '</td><td>' + countingarray[i].horse + '</td><td>' + countingarray[i].type/countingarray[i].counter + '</td><td>' + countingarray[i].head/countingarray[i].counter + '</td><td>' + countingarray[i].clog/countingarray[i].counter + '</td><td>' + countingarray[i].legs/countingarray[i].counter + '</td><td>' + countingarray[i].movement/countingarray[i].counter + '</td><td>' + countingarray[i].all/countingarray[i].counter + '</td></tr>');
 
-
-
+        }
 
     });
 
@@ -64,7 +79,6 @@ $(function(){
         else {
 
             $('#ScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
-
             actualscores.push(ratingtemp._id);
         }
     });
