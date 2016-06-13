@@ -15,9 +15,9 @@
 
 
 <div class="btn-group-justified" role="group" aria-label="...">
-    <a href="/" class="btn btn-info">Spectator Panel</a>
-    <a href="/judge" class="btn btn-warning">Jugde Panel</a>
-    <a href="/admin" class="btn btn-danger">Admin Panel</a>
+    <a href="/" class="btn btn-info">Spectator</a>
+    <a href="/judge" class="btn btn-warning">Jugde</a>
+    <a href="/admin" class="btn btn-danger">Admin</a>
     <a href="/login" class="btn btn-success">Account</a>
 
 
@@ -37,18 +37,19 @@
             <input type="search" class="light-table-filter" data-table="sortable" placeholder="Filter">
 
                 <h2 style="text-align: center;">Counted Scores</h2>
-                <table id="FinalScoreTable"class="sortable table table-bordered table-responsive"  >
+            <div class="table-responsive">
+                <table id="FinalScoreTable"class="sortable table table-bordered"  >
                     <thead>
                     <tr>
                         <th class="col-md-1">Tournament</th>
                         <th class="col-md-1">Group</th>
                         <th class="col-md-1">Horse</th>
                         <th class="col-md-1">Type</th>
-                        <th class="col-md-1">Head and Neck</th>
+                        <th class="col-md-1">Head</th>
                         <th class="col-md-1">Clog</th>
                         <th class="col-md-1">Legs</th>
-                        <th class="col-md-1">Movement</th>
-                        <th class="col-md-1">Final Score</th>
+                        <th class="col-md-1">Move</th>
+                        <th class="col-md-1">Score</th>
 
 
                     </tr>
@@ -63,18 +64,20 @@
 
                     </tbody>
                 </table>
+         </div>
             <h2 style="text-align: center;">All Scores</h2>
-            <table id="ScoreTable" class="sortable table table-bordered table-responsive">
+            <div class="table-responsive">
+            <table id="ScoreTable" class="sortable table table-bordered">
                 <thead>
                 <tr>
                     <th class="col-md-1">Tournament</th>
                     <th class="col-md-1">Group</th>
                     <th class="col-md-1">Horse</th>
                     <th class="col-md-1">Type</th>
-                    <th class="col-md-1">Head and Shoulder</th>
+                    <th class="col-md-1">Head</th>
                     <th class="col-md-1">Clog</th>
                     <th class="col-md-1">Legs</th>
-                    <th class="col-md-1">Movement</th>
+                    <th class="col-md-1">Move</th>
 
 
                 </tr>
@@ -88,6 +91,7 @@
                 </tbody>
             </table>
             </div>
+        </div>
         </div>
 
 

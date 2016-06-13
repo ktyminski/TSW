@@ -13,9 +13,9 @@
 
 <p>Your Code:<span id="logged"><%=judgecode%></span></p>
 <div class="btn-group-justified" role="group" aria-label="...">
-    <a href="/" class="btn btn-info">Spectator Panel</a>
-    <a href="/judge" class="btn btn-warning">Jugde Panel</a>
-    <a href="/admin" class="btn btn-danger">Admin Panel</a>
+    <a href="/" class="btn btn-info">Spectator</a>
+    <a href="/judge" class="btn btn-warning">Jugde</a>
+    <a href="/admin" class="btn btn-danger">Admin</a>
     <a href="/login" class="btn btn-success">Account</a>
 
 
@@ -53,6 +53,7 @@
 
             <div style="margin-top:20px;padding:20px" class="navbar navbar-default">
                 <h3 style="text-align: center;">Actual Horse Under Rating</h3>
+                <div class="table-responsive">
                 <table id="JudgeTable" class="table table-bordered table-responsive">
                     <thead>
                     <tr>
@@ -60,12 +61,12 @@
                         <th hidden  >City</th>
                         <th hidden  >Groups</th>
                         <th hidden  >ActualGroup</th>
-                        <th class="col-md-1">ActualHorse</th>
+                        <th class="col-md-1">Horse</th>
                         <th class="col-md-1">Type</th>
-                        <th class="col-md-1">Head and Neck</th>
+                        <th class="col-md-1">Head</th>
                         <th class="col-md-1">Clog</th>
                         <th class="col-md-1">Legs</th>
-                        <th class="col-md-1">Movement</th>
+                        <th class="col-md-1">Move</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -78,6 +79,7 @@
 
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
 

@@ -16,9 +16,9 @@
 
 
 <div class="btn-group-justified" role="group" aria-label="...">
-    <a href="/" class="btn btn-info">Spectator Panel</a>
-    <a href="/judge" class="btn btn-warning">Jugde Panel</a>
-    <a href="/admin" class="btn btn-danger">Admin Panel</a>
+    <a href="/" class="btn btn-info">Spectator</a>
+    <a href="/judge" class="btn btn-warning">Jugde</a>
+    <a href="/admin" class="btn btn-danger">Admin</a>
     <a href="/login" class="btn btn-success">Account</a>
 
 
@@ -63,7 +63,7 @@
                 <span style="text-align: center" class="glyphicon glyphicon-search" ></span>
                         <h1 style="text-align: center">Current Tournaments</h1>
 
-
+                <div class="table-responsive">
                     <table id ="aTournamentListTable" class="table table-bordered">
                         <thead>
                         <tr>
@@ -89,10 +89,12 @@
                         </tbody>
                     </table>
             </div>
+                </div>
 
                 <div id="TournamentList" class="tab-pane fade" >
 
                                         <h2 style="text-align: center">Tournament List</h2>
+                    <div class="table-responsive">
                                     <table id="TournamentListTable" class="table table-bordered">
                                         <thead>
                                         <tr>
@@ -115,6 +117,7 @@
                         </tbody>
                     </table>
                 </div>
+                    </div>
 
                 <div id="GroupList" class="tab-pane fade">
                         <h2 style="text-align: center">Group List</h2>
