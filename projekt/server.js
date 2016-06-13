@@ -58,8 +58,6 @@ passport.deserializeUser(Account.deserializeUser());
 
 var port = process.env.PORT || 3000;
 
-
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use('/js/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
 app.use(static(path.join(__dirname, '/public')));
@@ -80,16 +78,15 @@ db.once('open', function () {
 
 });
 
-
 var LoggedAdmin = function() {
     return function(req, res, next) {
         if(req.user){
             if (req.user.role === 'admin')
                 next();
             else
-                res.redirect('/unauthorized');
+                res.redirect('/loginerror');
         }else
-            res.redirect('/unauthorized2');
+            res.redirect('/loginerror');
     };
 };
 
@@ -101,9 +98,9 @@ var LoggedJudge = function() {
                 return req.user.username;
             }
             else
-                res.redirect('/unauthorized');
+                res.redirect('/loginerror');
         }else
-            res.redirect('/unauthorized2');
+            res.redirect('/loginerror');
     };
 };
 //-------------------------------------SOCKET------------------------------
@@ -122,11 +119,6 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-
-
-
-
-
 
     socket.on("newHorse", function(newHorse){
         var hh = new Horse({name:newHorse.name, sex:newHorse.sex, owner:newHorse.owner});
@@ -209,7 +201,7 @@ io.sockets.on("connection", function (socket) {
                             selectorposition = { type:found.type, head:found.head, clog:found.clog, legs:found.legs, movement:found.movement };
                             io.emit("addingJudgePanel", atournamenttemp,selectorposition);
                         }else{
-                            selectorposition = {type:"rate", head:"rate", clog:"rate", legs:"rate", movement:"rate" };
+                            selectorposition = {type:null, head:null, clog:null, legs:null, movement:null };
                             io.emit("addingJudgePanel", atournamenttemp,selectorposition);
                         }
 
@@ -250,8 +242,6 @@ io.sockets.on("connection", function (socket) {
 
 
     });
-
-
     socket.on("deleteJudge", function(judgecode) {
         Judge.find({code: judgecode}).remove().exec();
         io.emit("deletedJudge");
@@ -273,8 +263,6 @@ io.sockets.on("connection", function (socket) {
         io.emit("deletedaTournament");
         io.emit("TournamentEnd");
     });
-
-
     socket.on("AddRecords", function(name,city,groups){
         var tournamenttemp;
         var tourgroup;
@@ -332,6 +320,11 @@ io.sockets.on("connection", function (socket) {
         var tourhorse;
         var tourjudge;
         var grouptemp;
+        var grouprank=[];
+        var errorstring;
+        var tourjud;
+        var tourhor;
+        var actgrp=actualgroup;
         var str = groups.split(",");
         var info =str.length;
 
@@ -365,6 +358,41 @@ io.sockets.on("connection", function (socket) {
 
                     Group.find({name: actualgroup}, function (err, groups) {
                         groups.forEach(function (group1) {
+                            grouptemp = {
+                                name: group1.name,
+                                type: group1.type,
+                                horses: group1.horses,
+                                judges: group1.judges
+                            };
+                            if (tourgroup.indexOf(group1.horses) > -1) {
+                            } else {
+                                tourhorse = (grouptemp.horses);
+                                tourjudge = (grouptemp.judges);
+                            }
+                        });
+                        callback2();
+                    });
+
+                },
+                function (callback3) {
+                    console.log(actgrp);
+                    Rating.find({group:actgrp },function(err, ratings) {
+                        ratings.forEach(function(rate1) {
+                            var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                            grouprank.push(ratingtemp.judge);
+                            if (rate1.type==="00" ||rate1.head==="00" ||rate1.clog==="00" ||rate1.legs==="00" ||rate1.movement==="00"){
+                                errorstring="error";
+                            }
+                        });
+                        callback3();
+                    });
+
+
+                },
+                function (callback4) {
+
+                    Group.find({name: actgrp}, function (err, groups) {
+                        groups.forEach(function (group1) {
 
                             grouptemp = {
                                 name: group1.name,
@@ -375,28 +403,27 @@ io.sockets.on("connection", function (socket) {
                             if (tourgroup.indexOf(group1.horses) > -1) {
 
                             } else {
-                                tourhorse = (grouptemp.horses);
-                                tourjudge = (grouptemp.judges);
+                                tourjud= (grouptemp.horses);
+                                tourhor = (grouptemp.judges);
                             }
                         });
 
-                        callback2();
+                        callback4();
                     });
 
-                }
+                },
             ], function (err) {
                 if (err) {
                     throw err;
                 }
-                console.log(tourjudge);
-                io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
-                // io.emit("RefreshingJudge");
-                io.emit("checkingJudge");
+
+
+                if (grouprank.length===(tourjud.length*tourhor.length) && errorstring!=="error") {
+                    io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
+                    io.emit("checkingJudge")
+                }
 
             });
-            // var info =str.length;
-            //  if
-            //  console.log(info);
 
         }
     });
@@ -406,6 +433,8 @@ io.sockets.on("connection", function (socket) {
         var tourhorse=[];
         var tourjudge;
         var grouptemp;
+        var grouprank=[];
+        var errorstring;
 
 
         async.series([
@@ -435,7 +464,22 @@ io.sockets.on("connection", function (socket) {
                     callback2();
                 });
 
-            }
+            },
+            function (callback3) {
+
+                Rating.find({group:actualgroup , horse:actualhorse},function(err, ratings) {
+                    ratings.forEach(function(rate1) {
+                        var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                      grouprank.push(ratingtemp.judge);
+                        if (rate1.type==="00" ||rate1.head==="00" ||rate1.clog==="00" ||rate1.legs==="00" ||rate1.movement==="00"){
+                            errorstring="error";
+                        }
+                    });
+                    callback3();
+                });
+
+
+            },
         ], function(err) {
             if (err) {
                 throw err;
@@ -448,19 +492,21 @@ io.sockets.on("connection", function (socket) {
             if(actualhorse === tourhorse[info-1] ){
 
             }else {
-                for (i=0; i < info; i++) {
+
+                for (var i=0; i < info; i++) {
                     if (actualhorse == tourhorse[i]) {
+                        if (grouprank.length===tourjudge.length && errorstring!=="error"){
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
                         io.emit("checkingJudge");
                         break;
+                        }
 
                     }
                 }
             }
         });
     });
-
     socket.on("NextActualWarning", function(name,city,groups,actualgroup,actualhorse){
         var tournamenttemp;
         var tourgroup;
@@ -511,13 +557,11 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-
-
     socket.on("deleteScores", function() {
 
         async.series([
             function(callback) {
-                Rating.find({}).remove().exec();   
+                Rating.find({}).remove().exec();
                 callback();
             },
 
@@ -526,11 +570,9 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-
     socket.on("newScores", function() {
         io.emit('refr');
     });
-
     socket.on("CheckJudge", function (param) {
         aTournament.find({},function(err, atours) {
             atours.forEach(function(tour1) {
@@ -541,10 +583,7 @@ io.sockets.on("connection", function (socket) {
 
     })
 
-
-
-    socket.on("NewRatingServer",function(ratingsnew)
-    {
+    socket.on("NewRatingServer",function(ratingsnew) {
         var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
         socket.emit('RefreshScoreList');
         hh.save(function () {
@@ -563,42 +602,29 @@ io.sockets.on("connection", function (socket) {
 });
 
 
-
-
-
-
 //server
 server.listen(serverPort, function() {
     console.log('server up and running at %s port', serverPort);
 });
-
 app.get('/', function (req, res) {
     //res.sendFile(__dirname + '/public/index.ejs');
     res.render(__dirname + '/public/index.ejs');
 });
-
-app.get('/unauthorized', function (req, res) {
-    res.render(__dirname + '/public/unauthorized.ejs');
+app.get('/loginerror', function (req, res) {
+    res.render(__dirname + '/public/loginerror.ejs');
 });
-
-app.get('/unauthorized2', function (req, res) {
-    res.render(__dirname + '/public/unauthorized2.ejs');
-});
-
-
 app.get('/register',LoggedAdmin(), function(req, res) {
     res.render('register', { });
 });
-
-// app.get('/judge', LoggedJudge(), function (req, res) {
-//     res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});
-// });
-
-
 app.post('/login', passport.authenticate('local'), function(req, res) {
-    res.redirect('/');
-});
+    if (req.user.role==="judge"){
+        res.redirect('/judge');
+    }else{
+        res.redirect('/admin');
 
+    }
+
+});
 app.post('/register', LoggedAdmin(), function(req, res) {
     Account.register(new Account({ username : req.body.username, role: req.body.role }), req.body.password, function(err, account) {
         if (err) {
@@ -612,20 +638,16 @@ app.post('/register', LoggedAdmin(), function(req, res) {
 app.get('/login', function(req, res) {
     res.render('login', { user : req.user });
 });
-
 app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/');
 });
-
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
-
 app.get('/admin', LoggedAdmin(), function (req, res) {
     res.sendFile(__dirname + '/public/admin.html');
 });
-
 app.get('/judge', LoggedJudge(), function (req, res) {
    // res.sendFile(__dirname + '/public/judge.html');
     res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});

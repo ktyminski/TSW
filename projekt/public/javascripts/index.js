@@ -79,8 +79,9 @@ $(function(){
         }
         else {
 
-            $('#ScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + ratingtemp.type + '</td><td>' + ratingtemp.head + '</td><td>' + ratingtemp.clog + '</td><td>' + ratingtemp.legs + '</td><td>' + ratingtemp.movement + '</td></tr>');
+            $('#ScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
             actualscores.push(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ ratingtemp.type + ratingtemp.head+ ratingtemp.clog+ ratingtemp.legs+ ratingtemp.movement);
+
         }
     });
 

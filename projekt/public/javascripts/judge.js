@@ -6,6 +6,7 @@ var group;
 var horse;
 var param;
 var socket;
+var unrated;
 
 $(function() {
 
@@ -57,6 +58,16 @@ $(function() {
 
             if (param === tourjudge[i]) {
                 $('#JudgeWarning').text("Hurry Up");
+                var x = document.getElementById("JudgeTable").getElementsByTagName("td");
+                if (unrated.type===null || unrated.type==="00" ){ x[5].style.backgroundColor = "red";}
+                if  (unrated.head===null || unrated.head==="00"){ x[6].style.backgroundColor = "red";}
+                if   (unrated.clog===null || unrated.clog==="00"){ x[7].style.backgroundColor = "red";}
+                if  (unrated.legs===null || unrated.legs==="00"){ x[8].style.backgroundColor = "red";}
+                if  ( unrated.movement===null || unrated.movement==="00"){  x[9].style.backgroundColor = "red"; }
+                console.log(unrated);
+
+
+
             }
         }
     });
@@ -84,12 +95,20 @@ $(function() {
                     group=temporary.actualgroup;
                     horse=temporary.actualhorse;
 
-                    $('#JudgeTable').append('<tr><td>' + temporary.name + '</td><td>' + temporary.city + '</td><td>' + temporary.groups + '</td><td>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
+                    $('#JudgeTable').append('<tr><td hidden>' + temporary.name + '</td><td hidden>' + temporary.city + '</td><td hidden>' + temporary.groups + '</td><td hidden>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
                     $("#type").val(positonselector.type);
                     $("#head").val(positonselector.head);
                     $("#clog").val(positonselector.clog);
                     $("#legs").val(positonselector.legs);
                     $("#movement").val(positonselector.movement);
+
+                    var a= positonselector.type;
+                    var b= positonselector.head;
+                    var c= positonselector.clog;
+                    var d= positonselector.legs;
+                    var e= positonselector.movement;
+                    unrated ={type:a,head:b, clog:c, legs:d, movement:e};
+                    console.log(unrated);
 
                     
                     actualstring=temporary.name+temporary.actualgroup+temporary.actualhorse;
@@ -133,16 +152,27 @@ $(function() {
 function changedetected() {
     var ratings = {tournament:tournament, group:group, horse:horse,judge:param, type: $('#type').val(), head: $('#head').val(), clog:$('#clog').val(), legs: $('#legs').val(),movement: $('#movement').val()};
     console.log(ratings);
+    unrated ={type:ratings.type,head:ratings.head, clog:ratings.clog, legs:ratings.legs, movement:ratings.movement};
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
-    if (ratings.type===null||ratings.head===null||ratings.clog===null||ratings.legs===null||ratings.movement===null)
-    {
+    var x = document.getElementById("JudgeTable").getElementsByTagName("td");
+    if (ratings.type!==null && ratings.type!=="00" ){ x[5].style.backgroundColor = "";}
+    if  (ratings.head!==null && ratings.head!=="00"){ x[6].style.backgroundColor = "";}
+    if   (ratings.clog!==null && ratings.clog!=="00"){ x[7].style.backgroundColor = "";}
+    if  (ratings.legs!==null && ratings.legs!=="00"){ x[8].style.backgroundColor = "";}
+    if  ( ratings.movement!==null && ratings.movement!=="00"){  x[9].style.backgroundColor = ""; }
+        if (ratings.type===null){ratings.type="00";}
+        if (ratings.head===null){ratings.head="00";}
+        if (ratings.clog===null){ratings.clog="00";}
+    if(ratings.legs===null){ratings.legs="00";}
+    if (ratings.movement===null){ratings.movement="00";}
+
     console.log("please mark all parameters");
-    }else {
+
         socket.emit("UpdateRatingServer", ratings);
         socket.emit("RefreshScoreList");
 
-    }
+
 }
 
