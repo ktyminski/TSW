@@ -2,8 +2,12 @@
  * Created by Karol on 30.05.2016.
  */
 /* global io: true */
-"use strict";
+/* globals $:false */
+/* globals console:false*/
+
+
 $(function(){
+    "use strict";
 
 
     var socket;
