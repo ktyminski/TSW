@@ -32,6 +32,7 @@ $(function(){
     socket.on("addingHorse", function(horsetemp) {
 
         if ($.inArray(horsetemp.name, actualhorselist) !== -1) {
+            console.log();
 
         }
         else {
@@ -71,7 +72,7 @@ $(function(){
     });
     $('#HorseListTable').on('click', '#DeleteHorseButton', function() {
         var horsecode = $(this).closest('tr').find('td:eq(0)').text();
-        socket.emit("deleteHorse", horsecode)
+        socket.emit("deleteHorse", horsecode);
     });
     $('#aTournamentListTable').on('click', '.btn.btn-success', function() {
             var horsecode = $(this).closest('tr').find('td:eq(0)').text();
@@ -89,7 +90,7 @@ $(function(){
     socket.on("addingJudge", function(judgetemp) {
 
         if ($.inArray(judgetemp.code, actualjudgelist) !== -1) {
-
+            console.log();
         }
         else {
             $('#JudgeListTable').append('<tr><td>' + judgetemp.code + '</td><td>' + judgetemp.name + '</td><td>' + judgetemp.surname + '</td> <td><button type="button" id="#addJudgeGroupButton'+judgetemp.code+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Judge" id="EditJudgeButton'+judgetemp.code+'"  class="btn btn-danger" ><td><button id ="DeleteJudgeButton" type="button" onclick="function () {  }" class="btn btn-warning " >Delete</button></td></tr>');
@@ -107,7 +108,7 @@ $(function(){
     socket.on("addingGroup", function(grouptemp) {
 
             if ($.inArray(grouptemp.name, actualgrouplist) !== -1) {
-
+                console.log();
             }
             else {
                 $('#GroupListTable').append('<tr><td>' + grouptemp.name + '</td><td>' + grouptemp.type + '</td><td>' + grouptemp.horses + '</td><td>' + grouptemp.judges + '</td><td><button type="button" id="#addTournamentGroupButton'+grouptemp.name+'" class="btn btn-info" >Add to next tournament</button><td><button type="button" id="DeleteGroupButton" onclick="function() {  }" class="btn btn-warning " >Delete</button></td></tr>');
@@ -143,7 +144,8 @@ $(function(){
  /////////////////////////////////////////////////////////////////////////////////////////////tournament
     socket.on("addingTournament", function(tournamenttemp) {
 
-        if ($.inArray(tournamenttemp.name, actualtournamentlist) !== -1) {
+        if ($.inArray(tournamenttemp.name, actualtournamentlist) !== -1){
+            console.log("");
 
         }
         else {
@@ -234,6 +236,7 @@ $(function(){
 
 
         if ($.inArray(name, horsetab) !== -1){
+            console.log();
 
         }else {
             $('#HorseGroupTable').append('<tr><td>' + name + '</td><td>' + sex + '</td><td>' + owner + '</td> <td><button type="button" id="#deleteHorseGroupButton' + name + '" class="btn btn-info " >Delete</button></td></tr>');
@@ -246,6 +249,7 @@ $(function(){
         var name = $(this).closest('tr').find('td:eq(1)').text();
         var surname = $(this).closest('tr').find('td:eq(2)').text();
         if ($.inArray(code, judgetab) !== -1){
+            console.log();
 
         }else {
         $('#JudgeGroupTable').append('<tr><td>' +code + '</td><td>' + name + '</td><td>' + surname + '</td> <td><button type="button" id="#deleteJudgeGroupButton'+name+'" class="btn btn-info " >Delete</button></td></tr>');
@@ -259,6 +263,7 @@ $(function(){
         var horses = $(this).closest('tr').find('td:eq(2)').text();
         var judges = $(this).closest('tr').find('td:eq(3)').text();
         if ($.inArray(name, grouptab) !== -1){
+            console.log();
 
         }else {
             $('#GroupTournamentTable').append('<tr><td>' +name + '</td><td>' + type + '</td><td>' + horses + '</td><td>' + judges + '</td> <td><button type="button" id="#deleteGroupTournamentButton'+name+'" class="btn btn-info " >Delete</button></td></tr>');
@@ -269,6 +274,7 @@ $(function(){
     socket.on("addingaTournament", function(atourtemp) {
 
             if ($.inArray(atourtemp.name, actualatournamentlist) !== -1) {
+                console.log();
 
             }
             else {
@@ -281,7 +287,7 @@ $(function(){
     socket.on("addingaTournament", function(atourtemp) {
 
         if ($.inArray(atourtemp.name, actualatournamentlist) !== -1) {
-
+            console.log();
         }
         else {
 
@@ -308,14 +314,14 @@ $(function(){
            // socket.emit("JudgeMarks",tourjudge);
 
         });
-    $('#TournamentListTable').on('click', '.btn.btn-success', function () {
-
-
-        var newaTournament = {name:name, city:city, groups:groups ,actualgroup:actualgroup, actualhorse:actualhorse};
-        socket.emit("newaTournament", newaTournament);
-        socket.emit('RefreshaTournamentList');
-
-    });
+    // $('#TournamentListTable').on('click', '.btn.btn-success', function () {
+    //
+    //
+    //     var newaTournament = {name:name, city:city, groups:groups ,actualgroup:actualgroup, actualhorse:actualhorse};
+    //     socket.emit("newaTournament", newaTournament);
+    //     socket.emit('RefreshaTournamentList');
+    //
+    // });
 ///////////////////////////////////////////aktualny tournament ///////////////konie
     
     $('#aTournamentListTable').on('click', '.btn.btn-warning', function () {

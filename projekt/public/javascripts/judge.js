@@ -1,6 +1,7 @@
 /**
  * Created by Karol on 30.05.2016.
  */
+"use strict";
 var tournament;
 var group;
 var horse;
@@ -74,16 +75,14 @@ $(function() {
 
     socket.on("addingJudgePanel", function (temporary, positonselector, params) {
         if (firstparam === params) {
-            console.log(firstparam);
-            console.log(param);
+
         for (var i=0;i<temporary.judges.length;i++)
         {
 
             if (param === temporary.judges[i]) {
 
-                    console.log(param);
-                    console.log(firstparam);
                     if (actualstring === temporary.name + temporary.actualgroup + temporary.actualhorse) {
+                        console.log("");
                     } else {
                         $("#JudgeTable tbody  tr").remove();
 

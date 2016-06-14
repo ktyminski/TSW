@@ -1,7 +1,8 @@
+"use strict";
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
-var path = require('path')
+var path = require('path');
 var fs = require('fs');
 var https = require('https');
 var http = require('http');
@@ -81,12 +82,11 @@ db.once('open', function () {
 var LoggedAdmin = function() {
     return function(req, res, next) {
         if(req.user){
-            if (req.user.role === 'admin')
-                next();
-            else
-                res.redirect('/loginerror');
-        }else
-            res.redirect('/loginerror');
+            if (req.user.role === 'admin'){                next();
+            }
+            else{   res.redirect('/loginerror');}
+        }else{ res.redirect('/loginerror');}
+
     };
 };
 
@@ -97,10 +97,9 @@ var LoggedJudge = function() {
                 next();
                 return req.user.username;
             }
-            else
-                res.redirect('/loginerror');
-        }else
-            res.redirect('/loginerror');
+            else{ res.redirect('/loginerror');}
+
+        }else{            res.redirect('/loginerror');}
     };
 };
 //-------------------------------------SOCKET------------------------------
@@ -108,10 +107,11 @@ var LoggedJudge = function() {
 io.sockets.on("connection", function (socket) {
 
     socket.on("RefreshScoreList", function(){
-
+        
         Rating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
-                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                
                 io.emit("addingScore", ratingtemp);
                 io.emit('counting', ratingtemp);
             });
@@ -196,7 +196,6 @@ io.sockets.on("connection", function (socket) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse ,judges:tour1.judges};
                 if (name === atournamenttemp.name) {
                     var selectorposition;
-                    console.log(param);
                     Rating.findOne({"tournament": atournamenttemp2.name, "group": atournamenttemp2.actualgroup, "horse":atournamenttemp2.actualhorse, "judge":param},function(err,found) {
                         if(found){
                             selectorposition = { type:found.type, head:found.head, clog:found.clog, legs:found.legs, movement:found.movement };
@@ -330,10 +329,10 @@ io.sockets.on("connection", function (socket) {
         var info =str.length;
 
         if(actualgroup === str[info-1] ){
-
+            console.log("");
         }else {
-            for (i = 0; i < info; i++) {
-                if (actualgroup == str[i]) {
+            for (var i = 0; i < info; i++) {
+                if (actualgroup === str[i]) {
                     actualgroup = str[i + 1];
                     break;
                 }
@@ -366,6 +365,7 @@ io.sockets.on("connection", function (socket) {
                                 judges: group1.judges
                             };
                             if (tourgroup.indexOf(group1.horses) > -1) {
+                                console.log("");
                             } else {
                                 tourhorse = (grouptemp.horses);
                                 tourjudge = (grouptemp.judges);
@@ -376,7 +376,6 @@ io.sockets.on("connection", function (socket) {
 
                 },
                 function (callback3) {
-                    console.log(actgrp);
                     Rating.find({group:actgrp },function(err, ratings) {
                         ratings.forEach(function(rate1) {
                             var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
@@ -402,6 +401,7 @@ io.sockets.on("connection", function (socket) {
                                 judges: group1.judges
                             };
                             if (tourgroup.indexOf(group1.horses) > -1) {
+                                console.log("");
 
                             } else {
                                 tourjud= (grouptemp.horses);
@@ -421,7 +421,9 @@ io.sockets.on("connection", function (socket) {
 
                 if (grouprank.length===(tourjud.length*tourhor.length) && errorstring!=="error") {
                     io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
-                    io.emit("checkingJudge")
+                    io.emit("checkingJudge");
+                    io.emit("showTable");
+
                 }
 
             });
@@ -455,6 +457,7 @@ io.sockets.on("connection", function (socket) {
 
                         grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
                         if (tourgroup.indexOf(group1.horses) > -1) {
+                            console.log("");
 
                         } else {
                             tourhorse=(grouptemp.horses);
@@ -491,15 +494,17 @@ io.sockets.on("connection", function (socket) {
             var info =tourhorse.length;
 
             if(actualhorse === tourhorse[info-1] ){
+                console.log("");
 
             }else {
 
                 for (var i=0; i < info; i++) {
-                    if (actualhorse == tourhorse[i]) {
+                    if (actualhorse === tourhorse[i]) {
                         if (grouprank.length===tourjudge.length && errorstring!=="error"){
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
                         io.emit("checkingJudge");
+                            io.emit("showTable");
                         break;
                         }
 
@@ -533,6 +538,7 @@ io.sockets.on("connection", function (socket) {
 
                         grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
                         if (tourgroup.indexOf(group1.horses) > -1) {
+                            console.log("");
 
                         } else {
                             tourhorse=(grouptemp.horses);
@@ -553,7 +559,7 @@ io.sockets.on("connection", function (socket) {
 
             var info =tourhorse.length;
 
-            io.emit("Warning",name,tourjudge)
+            io.emit("Warning",name,tourjudge);
 
 
         });
@@ -584,7 +590,7 @@ io.sockets.on("connection", function (socket) {
             });
         });
 
-    })
+    });
 
     socket.on("NewRatingServer",function(ratingsnew) {
         var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
@@ -599,6 +605,10 @@ io.sockets.on("connection", function (socket) {
         socket.emit('RefreshScoreList');
 
     });
+    
+    // socket.on("pushtables",function(){
+    //    
+    // });
 
 
 
