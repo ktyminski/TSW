@@ -16,7 +16,7 @@ $(function(){
     socket.on("refr", function() {
         //$('#ScoreTable tbody  tr').remove();
 
-  
+
         socket.emit('RefreshScoreList');
     });
     socket.on("refrr", function() {
@@ -49,14 +49,10 @@ $(function(){
                                     countingarray[i].legs=(value4);
                                     countingarray[i].movement=(value5);
                                     countingarray[i].all=(all);
-                                    countingarray[i].counter= countingarray[i].counter+1;
-                                    console.log(countingarray[i]);
-                                    console.log(countingarray.length);
+                                    countingarray[i].counter=countingarray[i].counter+1;
                                 }
                             }
-
                         }else{
-
                             counting =({tournament:ratingtemp.tournament,group:ratingtemp.group, horse: ratingtemp.horse, type: ratingtemp.type ,head: ratingtemp.head , clog: ratingtemp.clog , legs: ratingtemp.legs ,movement: ratingtemp.movement,all:parseFloat(ratingtemp.type)+parseFloat(ratingtemp.head)+parseFloat(ratingtemp.clog)+parseFloat(ratingtemp.legs) +parseFloat(ratingtemp.movement), counter:1});
                             countingarray.push(counting);
                             finalscore.push(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
@@ -64,10 +60,11 @@ $(function(){
                         }
                     }
         $('#FinalScoreTable tbody  tr').remove();
-        for (var i=0;i<countingarray.length;i++){
-            $('#FinalScoreTable').append('<tr><td>' + (countingarray[i].tournament) + '</td><td>' +countingarray[i].group + '</td><td>' + countingarray[i].horse + '</td><td>' + countingarray[i].type/countingarray[i].counter + '</td><td>' + countingarray[i].head/countingarray[i].counter + '</td><td>' + countingarray[i].clog/countingarray[i].counter + '</td><td>' + countingarray[i].legs/countingarray[i].counter + '</td><td>' + countingarray[i].movement/countingarray[i].counter + '</td><td>' + countingarray[i].all/countingarray[i].counter + '</td></tr>');
+        for (var j=0;j<countingarray.length;j++){
+            $('#FinalScoreTable').append('<tr><td>' + (countingarray[j].tournament) + '</td><td>' +countingarray[j].group + '</td><td>' + countingarray[j].horse + '</td><td>' + countingarray[j].type/countingarray[j].counter + '</td><td>' + countingarray[j].head/countingarray[j].counter + '</td><td>' + countingarray[j].clog/countingarray[j].counter + '</td><td>' + countingarray[j].legs/countingarray[j].counter + '</td><td>' + countingarray[j].movement/countingarray[j].counter + '</td><td>' + countingarray[j].all/countingarray[j].counter + '</td></tr>');
 
         }
+        
 
     });
 

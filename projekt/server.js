@@ -6,7 +6,7 @@ var fs = require('fs');
 var https = require('https');
 var http = require('http');
 var mongoose = require('mongoose');
-var static = require('serve-static');
+var statics = require('serve-static');
 var async = require('async');
 var waterfall = require('async-waterfall');
 var passport = require('passport');
@@ -28,8 +28,8 @@ var Tournament = require('./models/tournamentmodel');
 var aTournament = require('./models/atournamentmodel');
 
 
-app.use('javascripts/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(static(path.join(__dirname, '/public')));
+app.use('javascripts/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
+app.use(statics(path.join(__dirname, '/public')));
 
 var serverPort = 443;
 
@@ -59,8 +59,8 @@ passport.deserializeUser(Account.deserializeUser());
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use('/js/jquery.min.js', static(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(static(path.join(__dirname, '/public')));
+app.use('/js/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
+app.use(statics(path.join(__dirname, '/public')));
 
 app.use('/', routes);
 
@@ -196,13 +196,14 @@ io.sockets.on("connection", function (socket) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse ,judges:tour1.judges};
                 if (name === atournamenttemp.name) {
                     var selectorposition;
+                    console.log(param);
                     Rating.findOne({"tournament": atournamenttemp2.name, "group": atournamenttemp2.actualgroup, "horse":atournamenttemp2.actualhorse, "judge":param},function(err,found) {
                         if(found){
                             selectorposition = { type:found.type, head:found.head, clog:found.clog, legs:found.legs, movement:found.movement };
-                            io.emit("addingJudgePanel", atournamenttemp,selectorposition);
+                            io.emit("addingJudgePanel", atournamenttemp,selectorposition,param);
                         }else{
                             selectorposition = {type:null, head:null, clog:null, legs:null, movement:null };
-                            io.emit("addingJudgePanel", atournamenttemp,selectorposition);
+                            io.emit("addingJudgePanel", atournamenttemp,selectorposition,param);
                         }
 
                     });
@@ -578,6 +579,8 @@ io.sockets.on("connection", function (socket) {
             atours.forEach(function(tour1) {
                 var atournamenttemp = {name:tour1.name, city:tour1.city, groups:tour1.groups,  actualgroup:tour1.actualgroup ,  actualhorse:tour1.actualhorse , judges:tour1.judges};
                 io.emit("checkedJudge",param, atournamenttemp);
+
+
             });
         });
 
