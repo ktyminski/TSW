@@ -1,4 +1,6 @@
-"use strict";
+/* jshint strict: true ,evil:true, node: true , browser:true */
+/* global io: true */
+'use strict';
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
@@ -314,7 +316,7 @@ io.sockets.on("connection", function (socket) {
 
         });
     });
-    socket.on("NextActualGroup", function(name,city,groups,actualgroup,actualhorse) {
+    socket.on("NextActualGroup", function(name,city,groups,actualgroup) {
         var tournamenttemp;
         var tourgroup;
         var tourhorse;
@@ -412,7 +414,7 @@ io.sockets.on("connection", function (socket) {
                         callback4();
                     });
 
-                },
+                }
             ], function (err) {
                 if (err) {
                     throw err;
@@ -483,7 +485,7 @@ io.sockets.on("connection", function (socket) {
                 });
 
 
-            },
+            }
         ], function(err) {
             if (err) {
                 throw err;
@@ -513,7 +515,7 @@ io.sockets.on("connection", function (socket) {
             }
         });
     });
-    socket.on("NextActualWarning", function(name,city,groups,actualgroup,actualhorse){
+    socket.on("NextActualWarning", function(name,city,groups,actualgroup){
         var tournamenttemp;
         var tourgroup;
         var tourhorse=[];
@@ -557,7 +559,6 @@ io.sockets.on("connection", function (socket) {
 
             }
 
-            var info =tourhorse.length;
 
             io.emit("Warning",name,tourjudge);
 
@@ -570,9 +571,9 @@ io.sockets.on("connection", function (socket) {
             function(callback) {
                 Rating.find({}).remove().exec();
                 callback();
-            },
+            }
 
-        ], function(err) {
+        ], function() {
             io.emit('refrr');
 
         });
