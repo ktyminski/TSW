@@ -1,6 +1,7 @@
 /**
  * Created by Karol on 30.05.2016.
  */
+/* global io: true */
 "use strict";
 var tournament;
 var group;
@@ -66,7 +67,8 @@ $(function() {
     });
 
     socket.on("TournamentEnd", function (){
-        $("#JudgeTable tbody  tr").remove();
+
+        $('#JudgeTable').find("tbody").find("tr").remove();
         actualstring="";
 
     });
@@ -84,14 +86,15 @@ $(function() {
                     if (actualstring === temporary.name + temporary.actualgroup + temporary.actualhorse) {
                         console.log("");
                     } else {
-                        $("#JudgeTable tbody  tr").remove();
+                        var some=$('#JudgeTable');
+                        some.find("tbody").find("tr").remove();
 
                         $('#JudgeWarning').text("");
                         tournament = temporary.name;
                         group = temporary.actualgroup;
                         horse = temporary.actualhorse;
 
-                        $('#JudgeTable').append('<tr><td hidden>' + temporary.name + '</td><td hidden>' + temporary.city + '</td><td hidden>' + temporary.groups + '</td><td hidden>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
+                        some.append('<tr><td hidden>' + temporary.name + '</td><td hidden>' + temporary.city + '</td><td hidden>' + temporary.groups + '</td><td hidden>' + temporary.actualgroup + '</td><td>' + temporary.actualhorse + '</td><td><select id="type" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="head" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="clog" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="legs" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td><td><select  id="movement" onchange="changedetected()"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></td></tr>');
                         $("#type").val(positonselector.type);
                         $("#head").val(positonselector.head);
                         $("#clog").val(positonselector.clog);

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="file://$USER_HOME$/Documents/GitHub/TSW/projekt" libraries="{untitled node_modules}" />
+    <file url="file://$PROJECT_DIR$" libraries="{untitled node_modules}" />
+    <file url="PROJECT" libraries="{express-validator-DefinitelyTyped, jQuery UI-1.10.2, jQuery-2.0.0, mongodb-DefinitelyTyped, mongoose-DefinitelyTyped, node-DefinitelyTyped, socket.io-DefinitelyTyped, socket.io-client-DefinitelyTyped, untitled node_modules}" />
+    <includedPredefinedLibrary name="ECMAScript 6" />
     <includedPredefinedLibrary name="Node.js Core" />
   </component>
 </project>

@@ -1,14 +1,16 @@
 /**
  * Created by Karol on 30.05.2016.
  */
+/* global io: true */
 "use strict";
 $(function(){
-    var type = [];
-    var head = [];
-    var clog = [];
-    var legs = [];
-    var move = [];
+    // var type = [];
+    // var head = [];
+    // var clog = [];
+    // var legs = [];
+    // var move = [];
 
+    var id;
     var actualscores=[];
     var actualscoresfinal =[];
     var finalscore=[];
@@ -20,8 +22,8 @@ $(function(){
     }
     socket.emit('RefreshScoreList');
     socket.on("showTable", function() {
-        $('#ScoreTable tbody  tr').remove();
-        $('#FinalScoreTable tbody  tr').remove();
+        $('#ScoreTable').find("tbody").find("tr").remove();
+        $('#FinalScoreTable').find("tbody").find("tr").remove();
         actualscores=[];
         countingarray=[];
         actualscoresfinal =[];
@@ -31,8 +33,8 @@ $(function(){
         socket.emit('RefreshScoreList');
     });
     socket.on("refrr", function() {
-        $('#ScoreTable tbody  tr').remove();
-        $('#FinalScoreTable tbody  tr').remove();
+        $('#ScoreTable').find("tbody").find("tr").remove();
+        $('#FinalScoreTable').find("tbody").find("tr").remove();
         countingarray=[];
 
         socket.emit('RefreshScoreList');
@@ -41,10 +43,12 @@ $(function(){
 
                     if ($.inArray(ratingtemp._id, actualscoresfinal) !== -1) {
                         console.log();
-
+                        id="td#id"+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse;
                             // console.log(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
-                          //  $("td#id" + ratingtemp.tournament + ratingtemp.group + ratingtemp.horse).parent().replaceWith('<tr><td id="id' +ratingtemp.tournament+ratingtemp.tournament+ratingtemp.horse+'">' + ratingtemp.tournament + '</td><td>' +  ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' +  ratingtemp.type + '</td><td>' +  ratingtemp.head + '</td><td>' +  ratingtemp.clog + '</td><td>' +  ratingtemp.legs + '</td><td>' +  ratingtemp.movement  + '</td><td>' +"11" +'</td></tr>');
 
+                           //$(id).parent().replaceWith('<tr><td id="id' +ratingtemp.tournament+ratingtemp.tournament+ratingtemp.horse+'">' + ratingtemp.tournament + '</td><td>' +  ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' +  ratingtemp.type + '</td><td>' +  ratingtemp.head + '</td><td>' +  ratingtemp.clog + '</td><td>' +  ratingtemp.legs + '</td><td>' +  ratingtemp.movement  + '</td><td>' +"11" +'</td></tr>');
+                        //$(id).parent().replaceWith(('<tr><td id="id' +ratingtemp.tournament+ratingtemp.tournament+ratingtemp.horse+'">x</td><td>x</td><td>' + ratingtemp.horse + '</td><td>' +  ratingtemp.type + '</td><td>' +  ratingtemp.head + '</td><td>' +  ratingtemp.clog + '</td><td>' +  ratingtemp.legs + '</td><td>' +  ratingtemp.movement  + '</td><td>' +"x" +'</td></tr>'));
+                        //console.log(id);
                     }
                     else {
                         actualscoresfinal.push(ratingtemp._id);
@@ -65,11 +69,11 @@ $(function(){
                                     countingarray[i].movement=(value5);
                                     countingarray[i].all=(all);
                                     countingarray[i].counter=countingarray[i].counter+1;
-                                    console.log( countingarray[i].counter);
                                     break;
                                 }
                             }
                         }else{
+
 
                             counting =({tournament:ratingtemp.tournament,group:ratingtemp.group, horse: ratingtemp.horse, type: ratingtemp.type ,head: ratingtemp.head , clog: ratingtemp.clog , legs: ratingtemp.legs ,movement: ratingtemp.movement,all:parseFloat(ratingtemp.type)+parseFloat(ratingtemp.head)+parseFloat(ratingtemp.clog)+parseFloat(ratingtemp.legs) +parseFloat(ratingtemp.movement), counter:1});
                             countingarray.push(counting);
@@ -78,10 +82,11 @@ $(function(){
                         }
                     }
 
-
-        $('#FinalScoreTable tbody  tr').remove();
+        var some=$('#FinalScoreTable');
+       some.find("tbody").find("tr").remove();
         for (var j=0;j<countingarray.length;j++){
-            $('#FinalScoreTable').append('<tr><td id="id'+countingarray[j].tournament+countingarray[j].group+countingarray[j].horse +'">' +countingarray[j].tournament + '</td><td>' +countingarray[j].group + '</td><td>' + countingarray[j].horse + '</td><td>' + countingarray[j].type/countingarray[j].counter + '</td><td>' + countingarray[j].head/countingarray[j].counter + '</td><td>' + countingarray[j].clog/countingarray[j].counter + '</td><td>' + countingarray[j].legs/countingarray[j].counter + '</td><td>' + countingarray[j].movement/countingarray[j].counter + '</td><td>' + countingarray[j].all/countingarray[j].counter + '</td></tr>');
+            some.append('<tr><td id="id'+countingarray[j].tournament+countingarray[j].group+countingarray[j].horse +'">' +countingarray[j].tournament + '</td><td>' +countingarray[j].group + '</td><td>' + countingarray[j].horse + '</td><td>' + countingarray[j].type/countingarray[j].counter + '</td><td>' + countingarray[j].head/countingarray[j].counter + '</td><td>' + countingarray[j].clog/countingarray[j].counter + '</td><td>' + countingarray[j].legs/countingarray[j].counter + '</td><td>' + countingarray[j].movement/countingarray[j].counter + '</td><td>' + countingarray[j].all/countingarray[j].counter + '</td></tr>');
+
 
         }
 
@@ -92,13 +97,15 @@ $(function(){
     socket.on("addingScore", function(ratingtemp) {
         if ($.inArray(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ratingtemp.judge, actualscores) !== -1) {
             console.log();
+            var aid="td#id"+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge;
+             $(aid).parent().replaceWith('<tr><td id="id' +ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge+'">' + ratingtemp.tournament + '</td><td>' +  ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' +  ratingtemp.type + '</td><td>' +  ratingtemp.head + '</td><td>' +  ratingtemp.clog + '</td><td>' +  ratingtemp.legs + '</td><td>' +  ratingtemp.movement  + '</td></tr>');
 
         }
         else {
             if (ratingtemp.type==="00" || ratingtemp.head==="00" || ratingtemp.clog==="00" || ratingtemp.legs==="00" || ratingtemp.movement==="00" ){
                 console.log();
             }else{
-            $('#ScoreTable').append('<tr><td>' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
+            $('#ScoreTable').append('<tr><td id="id'+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge+'">' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
             actualscores.push(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ratingtemp.judge);
             }
 

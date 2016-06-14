@@ -1,6 +1,7 @@
 /**
  * Created by Karol on 30.05.2016.
  */
+/* global io: true */
 "use strict";
 $(function(){
 
@@ -11,7 +12,7 @@ $(function(){
     var horsetab = [];  //tablica do dodawania koni do grup
     var judgetab = [];  //  ------------------ sedziow -----
         var grouptab = [];
-            var tournamenttab = [];
+            // var tournamenttab = [];
     var actualtournamentlist =[];
     var actualatournamentlist =[];
     var actualgrouplist =[];
@@ -26,6 +27,13 @@ $(function(){
     socket.emit('RefreshGroupList');
     socket.emit('RefreshTournamentList');
     socket.emit('RefreshaTournamentList');
+    var tourlisttable= $('#aTournamentListTable');
+    var horselisttable=$('#HorseListTable');
+    var grouplisttable=$('#GroupListTable');
+    var judgelisttable= $('#JudgeListTable');
+    var grouptourtable= $('#GroupTournamentTable');
+    var horsegrouptable=$('#HorseGroupTable');
+    var judgegrouptable=$('#JudgeGroupTable');
 
 
 /////////////////////////////////////////////////////////////////////////////////////dodawanie
@@ -37,7 +45,7 @@ $(function(){
         }
         else {
 
-            $('#HorseListTable').append('<tr><td>' + horsetemp.name + '</td><td>' + horsetemp.sex + '</td><td>' + horsetemp.owner + '</td> <td><button type="button" id="#addHorseGroupButton'+horsetemp.name+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Horse" id="EditHorseButton'+horsetemp.name+'"  class="btn btn-danger" ></button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-warning " >Delete</button></td></tr>');
+            horselisttable.append('<tr><td>' + horsetemp.name + '</td><td>' + horsetemp.sex + '</td><td>' + horsetemp.owner + '</td> <td><button type="button" id="#addHorseGroupButton'+horsetemp.name+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Horse" id="EditHorseButton'+horsetemp.name+'"  class="btn btn-danger" ></button></td><td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Delete</button></td></tr>');
                 
             actualhorselist.push(horsetemp.name);
         }
@@ -51,36 +59,36 @@ $(function(){
 
 });
     socket.on("deletedJudge", function(){
-        $("#JudgeListTable tbody  tr").remove();
+       judgelisttable.find("tbody").find("tr").remove();
         actualjudgelist = [];
         socket.emit('RefreshJudgeList');
     });
     socket.on("deletedaTournament", function(){
-        $("#aTournamentListTable tbody  tr").remove();
+        tourlisttable.find("tbody").find("tr").remove();
         actualatournamentlist = [];
         socket.emit('RefreshaTournamentList');
     });
-    $('#JudgeListTable').on('click', '#DeleteJudgeButton', function() {
+    judgelisttable.on('click', '#DeleteJudgeButton', function() {
         var judgecode = $(this).closest('tr').find('td:eq(0)').text();
         socket.emit("deleteJudge", judgecode);
 
     });
     socket.on("deletedHorse", function(){
-        $("#JudgeListTable tbody  tr").remove();
+        judgelisttable.find("tbody").find("tr").remove();
         actualjudgelist = [];
         socket.emit('RefreshJudgeList');
     });
-    $('#HorseListTable').on('click', '#DeleteHorseButton', function() {
+    horselisttable.on('click', '#DeleteHorseButton', function() {
         var horsecode = $(this).closest('tr').find('td:eq(0)').text();
         socket.emit("deleteHorse", horsecode);
     });
-    $('#aTournamentListTable').on('click', '.btn.btn-success', function() {
+    tourlisttable.on('click', '.btn.btn-success', function() {
             var horsecode = $(this).closest('tr').find('td:eq(0)').text();
             socket.emit("deleteaTournament", horsecode);
 
     });
     socket.on("deletedHorse", function(){
-        $("#HorseListTable tbody  tr").remove();
+       horselisttable.find("tbody").find("tr").remove();
         actualhorselist = [];
         socket.emit('RefreshList');
     });
@@ -93,7 +101,7 @@ $(function(){
             console.log();
         }
         else {
-            $('#JudgeListTable').append('<tr><td>' + judgetemp.code + '</td><td>' + judgetemp.name + '</td><td>' + judgetemp.surname + '</td> <td><button type="button" id="#addJudgeGroupButton'+judgetemp.code+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Judge" id="EditJudgeButton'+judgetemp.code+'"  class="btn btn-danger" ><td><button id ="DeleteJudgeButton" type="button" onclick="function () {  }" class="btn btn-warning " >Delete</button></td></tr>');
+            judgelisttable.append('<tr><td>' + judgetemp.code + '</td><td>' + judgetemp.name + '</td><td>' + judgetemp.surname + '</td> <td><button type="button" id="#addJudgeGroupButton'+judgetemp.code+'" class="btn btn-info " >Add to next group</button></td> <td><input type="button" value="Edit Judge" id="EditJudgeButton'+judgetemp.code+'"  class="btn btn-danger" ><td><button id ="DeleteJudgeButton" type="button"  class="btn btn-warning " >Delete</button></td></tr>');
 
             actualjudgelist.push(judgetemp.code);
         }
@@ -111,7 +119,7 @@ $(function(){
                 console.log();
             }
             else {
-                $('#GroupListTable').append('<tr><td>' + grouptemp.name + '</td><td>' + grouptemp.type + '</td><td>' + grouptemp.horses + '</td><td>' + grouptemp.judges + '</td><td><button type="button" id="#addTournamentGroupButton'+grouptemp.name+'" class="btn btn-info" >Add to next tournament</button><td><button type="button" id="DeleteGroupButton" onclick="function() {  }" class="btn btn-warning " >Delete</button></td></tr>');
+                $('#GroupListTable').append('<tr><td>' + grouptemp.name + '</td><td>' + grouptemp.type + '</td><td>' + grouptemp.horses + '</td><td>' + grouptemp.judges + '</td><td><button type="button" id="#addTournamentGroupButton'+grouptemp.name+'" class="btn btn-info" >Add to next tournament</button><td><button type="button" id="DeleteGroupButton"  class="btn btn-warning " >Delete</button></td></tr>');
 
                 actualgrouplist.push(grouptemp.name);
             }
@@ -127,17 +135,17 @@ $(function(){
             judgetab=[];
         socket.emit("newGroup", newGroup);
         socket.emit('RefreshGroupList');
-            $('#HorseGroupTable tbody  tr').remove();
-            $('#JudgeGroupTable tbody  tr').remove();
+           horsegrouptable.find("tbody").find("tr").remove();
+            judgegrouptable.find("tbody").find("tr").remove();
 
     });
-    $('#GroupListTable').on('click', '#DeleteGroupButton', function() {
+    grouplisttable.on('click', '#DeleteGroupButton', function() {
         var groupcode = $(this).closest('tr').find('td:eq(0)').text();
         socket.emit("deleteGroup", groupcode);
 
     });
     socket.on("deletedGroup", function(){
-        $("#GroupListTable tbody  tr").remove();
+        grouplisttable.find("tbody").find("tr").remove();
         actualgrouplist = [];
         socket.emit('RefreshGroupList');
     });
@@ -149,7 +157,7 @@ $(function(){
 
         }
         else {
-            $('#TournamentListTable').append('<tr><td>' + tournamenttemp.name + '</td><td>' + tournamenttemp.city + '</td><td>' + tournamenttemp.groups + '</td><td><button type="button" id="#addtoTournamentButton'+tournamenttemp.name+'" class="btn btn-info" >Start Tournament</button><td><button type="button" id="DeleteTournamentButton" onclick="function() {  }" class="btn btn-warning " >Delete Tournament</button></td></tr>');
+            $('#TournamentListTable').append('<tr><td>' + tournamenttemp.name + '</td><td>' + tournamenttemp.city + '</td><td>' + tournamenttemp.groups + '</td><td><button type="button" id="#addtoTournamentButton'+tournamenttemp.name+'" class="btn btn-info" >Start Tournament</button><td><button type="button" id="DeleteTournamentButton"  class="btn btn-warning " >Delete Tournament</button></td></tr>');
 
             actualtournamentlist.push(tournamenttemp.name);
         }
@@ -165,7 +173,7 @@ $(function(){
         grouptab=[];
         socket.emit("newTournament", newTournament);
         socket.emit('RefreshTournamentList');
-        $('#GroupTournamentTable tbody  tr').remove();
+        $('#GroupTournamentTable').find("tbody").find("tr").remove();
 
     });
     $('#TournamentListTable').on('click', '#DeleteTournamentButton', function() {
@@ -174,18 +182,18 @@ $(function(){
 
     });
     socket.on("deletedTournament", function(){
-        $("#TournamentListTable tbody  tr").remove();
+        $("#TournamentListTable").find("tbody").find("tr").remove();
         actualtournamentlist =[];
         socket.emit('RefreshTournamentList');
     });
     socket.on("deletedaTournament", function(){
-        $("#aTournamentListTable tbody  tr").remove();
+        $("#aTournamentListTable").find("tbody").find("tr").remove();
         actualatournamentlist =[];
         socket.emit('RefreshaTournamentList');
     });
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    $('#HorseListTable').on('click', '.btn.btn-danger', function () {
+    horselisttable.on('click', '.btn.btn-danger', function () {
         var name = $(this).closest('tr').find('td:eq(0)').text();
         //$(this).closest('tr').find('td:eq(0)').html('<input id="input1" type="text" value="'+name+'" />');
         var sex = $(this).closest('tr').find('td:eq(1)').text();
@@ -196,7 +204,7 @@ $(function(){
        var temp = '#EditHorseButton'+name;
         $(temp).val("Save");
         $(temp).click(function(){
-            var newname = $('#input1').val();
+
             var newsex = $('#input2').val();
             var newowner = $('#input3').val();
         var UpdateHorse = {id: name, name:name, sex:newsex, owner:newowner};
@@ -207,7 +215,7 @@ $(function(){
 
         });
    });
-    $('#JudgeListTable').on('click', '.btn.btn-danger', function () {
+    judgelisttable.on('click', '.btn.btn-danger', function () {
         var code = $(this).closest('tr').find('td:eq(0)').text();
        // $(this).closest('tr').find('td:eq(0)').html('<input id="input1" type="text" value="'+code+'" />');
         var name = $(this).closest('tr').find('td:eq(1)').text();
@@ -218,7 +226,6 @@ $(function(){
         var temp = '#EditJudgeButton'+code;
         $(temp).val("Save");
         $(temp).click(function(){
-            var newcode = $('#input1').val();
             var newname = $('#input2').val();
             var newsurname = $('#input3').val();
             var UpdateJudge = {id:code, code:code, name:newname, surname:newsurname};
@@ -228,7 +235,7 @@ $(function(){
 
         });
     });
-    $('#HorseListTable').on('click', '.btn.btn-info', function () {
+    horselisttable.on('click', '.btn.btn-info', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var sex = $(this).closest('tr').find('td:eq(1)').text();
@@ -244,7 +251,7 @@ $(function(){
         }
 
     });
-    $('#JudgeListTable').on('click', '.btn.btn-info', function () {
+    judgelisttable.on('click', '.btn.btn-info', function () {
         var code = $(this).closest('tr').find('td:eq(0)').text();
         var name = $(this).closest('tr').find('td:eq(1)').text();
         var surname = $(this).closest('tr').find('td:eq(2)').text();
@@ -257,7 +264,7 @@ $(function(){
         }
 
     });
-    $('#GroupListTable').on('click', '.btn.btn-info', function () {
+   grouplisttable.on('click', '.btn.btn-info', function () {
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var type = $(this).closest('tr').find('td:eq(1)').text();
         var horses = $(this).closest('tr').find('td:eq(2)').text();
@@ -278,8 +285,8 @@ $(function(){
 
             }
             else {
-             
-                $('#aTournamentListTable').append('<tr><td>' + atourtemp.name + '</td><td>' + atourtemp.city + '</td><td>' + atourtemp.groups + '</td> <td>' + atourtemp.actualgroup + '</td><td>' + atourtemp.actualhorse + '</td><td><button type="button" id="#addHorseGroupButton'+atourtemp.name+'" class="btn btn-info " >Next group</button></td> <td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Next Horse</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-danger " >Hurry Judges</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-success " >Close tournament</button></td></tr>');
+
+                tourlisttable.append('<tr><td>' + atourtemp.name + '</td><td>' + atourtemp.city + '</td><td>' + atourtemp.groups + '</td> <td>' + atourtemp.actualgroup + '</td><td>' + atourtemp.actualhorse + '</td><td><button type="button" id="#addHorseGroupButton'+atourtemp.name+'" class="btn btn-info " >Next group</button></td> <td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Next Horse</button></td><td><button type="button" id="DeleteHorseButton" class="btn btn-danger " >Hurry Judges</button></td><td><button type="button" id="DeleteHorseButton"  class="btn btn-success " >Close tournament</button></td></tr>');
 
                 actualatournamentlist.push(atourtemp.name);
             }
@@ -291,14 +298,14 @@ $(function(){
         }
         else {
 
-            $('#aTournamentListTable').append('<tr><td>' + atourtemp.name + '</td><td>' + atourtemp.city + '</td><td>' + atourtemp.groups + '</td> <td>' + atourtemp.actualgroup + '</td><td>' + atourtemp.actualhorse + '</td><td><button type="button" id="#addHorseGroupButton'+atourtemp.name+'" class="btn btn-info " >Next group</button></td> <td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Next Horse</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-danger " >Hurry Judges</button></td><td><button type="button" id="DeleteHorseButton" onclick="function() {  }" class="btn btn-success " >Close tournament</button></td></tr>');
+            tourlisttable.append('<tr><td>' + atourtemp.name + '</td><td>' + atourtemp.city + '</td><td>' + atourtemp.groups + '</td> <td>' + atourtemp.actualgroup + '</td><td>' + atourtemp.actualhorse + '</td><td><button type="button" id="#addHorseGroupButton'+atourtemp.name+'" class="btn btn-info " >Next group</button></td> <td><button type="button" id="DeleteHorseButton"  class="btn btn-warning " >Next Horse</button></td><td><button type="button" id="DeleteHorseButton" " class="btn btn-danger " >Hurry Judges</button></td><td><button type="button" id="DeleteHorseButton"  class="btn btn-success " >Close tournament</button></td></tr>');
 
             actualatournamentlist.push(atourtemp.name);
            
         }
     });
 //////////////////////////////////////////////////////////////////////////////////////////////wyswietlanie u admina aktualnych grup i koni
-    $('#TournamentListTable').on('click', '.btn.btn-info', function () {
+    tourlisttable.on('click', '.btn.btn-info', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var city = $(this).closest('tr').find('td:eq(1)').text();
@@ -323,8 +330,8 @@ $(function(){
     //
     // });
 ///////////////////////////////////////////aktualny tournament ///////////////konie
-    
-    $('#aTournamentListTable').on('click', '.btn.btn-warning', function () {
+
+    tourlisttable.on('click', '.btn.btn-warning', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var city = $(this).closest('tr').find('td:eq(1)').text();
@@ -335,7 +342,7 @@ $(function(){
 
 
     });
-    $('#aTournamentListTable').on('click', '.btn.btn-danger', function () {
+    tourlisttable.on('click', '.btn.btn-danger', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var city = $(this).closest('tr').find('td:eq(1)').text();
@@ -347,7 +354,7 @@ $(function(){
 
     });
     ////////////////////////////////////////////////////grupy
-    $('#aTournamentListTable').on('click', '.btn.btn-info', function func() {
+    tourlisttable.on('click', '.btn.btn-info', function func() {
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var city = $(this).closest('tr').find('td:eq(1)').text();
         var groups = $(this).closest('tr').find('td:eq(2)').text();
@@ -357,12 +364,12 @@ $(function(){
 
     });
     socket.on("UpdatingaTour", function(name,city,groups,tourgroup, tourhorse, tourjudge) {
-        var element=tourgroup;
-        var element2=tourhorse;
+        //var element=tourgroup;
+        //var element2=tourhorse;
         //var actualgroup =0;
         // var actualhorse =0;
 
-        var newaTournament = {name:name, city:city, groups:groups ,actualgroup:element, actualhorse:element2, judges:tourjudge};
+        var newaTournament = {name:name, city:city, groups:groups ,actualgroup:tourgroup, actualhorse:tourhorse, judges:tourjudge};
         socket.emit("newaTournament", newaTournament);
         socket.emit('RefreshaTournamentList');
 
@@ -373,17 +380,17 @@ $(function(){
         var UpdateaTournament = {name:name, actualgroup:actualgroup, actualhorse:tourhorse, judges:tourjudge };
         socket.emit("UpdateaTournament", UpdateaTournament);
     });
-    $('#GroupTournamentTable').on('click', '.btn.btn-info', function func() {
+    grouptourtable.on('click', '.btn.btn-info', function func() {
         var deletion = $(this).closest("tr");
         deletion.remove();
 
     });
-    $('#HorseGroupTable').on('click', '.btn.btn-info', function func() {
+    horsegrouptable.on('click', '.btn.btn-info', function func() {
         var deletion = $(this).closest("tr");
         deletion.remove();
 
     });
-    $('#JudgeGroupTable').on('click', '.btn.btn-info', function func() {
+    judgegrouptable.on('click', '.btn.btn-info', function func() {
         var deletion = $(this).closest("tr");
         deletion.remove();
 
