@@ -22,6 +22,7 @@ $(function(){
     var actualgrouplist =[];
 
 
+
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
@@ -38,6 +39,7 @@ $(function(){
     var grouptourtable= $('#GroupTournamentTable');
     var horsegrouptable=$('#HorseGroupTable');
     var judgegrouptable=$('#JudgeGroupTable');
+    var ourlisttable=$('#TournamentListTable')
 
 
 /////////////////////////////////////////////////////////////////////////////////////dodawanie
@@ -185,6 +187,11 @@ $(function(){
         socket.emit("deleteTournament", tournamentcode);
 
     });
+    $('#TournamentListTable').on('click', '#addTournamentButton', function() {
+        var tournamentcode = $(this).closest('tr').find('td:eq(0)').text();
+        socket.emit("deleteTournament", tournamentcode);
+
+    });
     socket.on("deletedTournament", function(){
         $("#TournamentListTable").find("tbody").find("tr").remove();
         actualtournamentlist =[];
@@ -309,7 +316,7 @@ $(function(){
         }
     });
 //////////////////////////////////////////////////////////////////////////////////////////////wyswietlanie u admina aktualnych grup i koni
-    tourlisttable.on('click', '.btn.btn-info', function () {
+    ourlisttable.on('click', '.btn.btn-info', function () {
 
         var name = $(this).closest('tr').find('td:eq(0)').text();
         var city = $(this).closest('tr').find('td:eq(1)').text();
