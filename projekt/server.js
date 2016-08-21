@@ -267,7 +267,7 @@ io.sockets.on("connection", function (socket) {
         io.emit("deletedTournament");
     });
     socket.on("deleteaTournament", function(tournamentcode) {
-        console.log(tournamentcode);
+
         aTournament.find({name: tournamentcode}).remove().exec();
         io.emit("deletedaTournament");
         io.emit("TournamentEnd",tournamentcode);
@@ -389,10 +389,10 @@ io.sockets.on("connection", function (socket) {
 
                 },
                 function (callback3) {
-                    Rating.find({group:actgrp },function(err, ratings) {
+                    Rating.find({tournament:name, group:actgrp },function(err, ratings) {
                         ratings.forEach(function(rate1) {
                             var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                            if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
+                           grouprank.push(ratingtemp.judge);
                         });
                         callback3();
                     });
@@ -434,6 +434,7 @@ io.sockets.on("connection", function (socket) {
                       io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
                       io.emit("checkingJudge");
                       io.emit("showTable");
+
 
                   }
               }
@@ -481,10 +482,10 @@ io.sockets.on("connection", function (socket) {
             },
             function (callback3) {
 
-                Rating.find({group:actualgroup , horse:actualhorse},function(err, ratings) {
+                Rating.find({tournament:name, group:actualgroup , horse:actualhorse},function(err, ratings) {
                     ratings.forEach(function(rate1) {
                         var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                        if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
+                       grouprank.push(ratingtemp.judge);
 
                     });
                     callback3();
@@ -561,10 +562,10 @@ io.sockets.on("connection", function (socket) {
             function (callback2) {
 
 
-                Rating.find({group:actualgroup , horse:actualhorse},function(err, ratings) {
+                Rating.find({tournament:name ,group:actualgroup , horse:actualhorse},function(err, ratings) {
                     ratings.forEach(function(rate1) {
                         var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                        if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
+                      grouprank.push(ratingtemp.judge);
                     });
                     callback2();
                 });
@@ -580,10 +581,16 @@ io.sockets.on("connection", function (socket) {
             
               //3 warunki ostatnia grupa, ostatni kon i wszystkie oceny i bangladesz
             if (actualgroup.valueOf()===str[info-1].valueOf() && actualhorse.valueOf()===horses[horses.length-1].valueOf() && grouprank.length===judges.length){
-                var tourjudge=null;
-                io.emit("EndOfTournament",name,tourjudge);
-                io.emit("showTable");
-                io.emit("TournamentEnd",name);
+                console.log(horses.length);
+                console.log(judges.length);
+                console.log(grouprank.length);
+                if (grouprank.length === (judges.length)) {
+                    var tourjudge = null;
+                    io.emit("EndOfTournament", name, tourjudge);
+                    io.emit("showTable");
+                    io.emit("TournamentEnd", name);
+
+                }
             }
 
         });
@@ -746,10 +753,8 @@ io.sockets.on("connection", function (socket) {
 
         FinalRating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
-                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement,all:rate1.all};
                 io.emit("addingfinalScore", ratingtemp);
-                // io.emit('counting', ratingtemp);
             });
 
 

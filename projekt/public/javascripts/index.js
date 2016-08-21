@@ -3,20 +3,20 @@
  */
 /* global io: true */
 "use strict";
+
 $(function(){
 
     var id;
     var actualscores=[];
-  //  var actualscoresfinal =[];
-  //  var finalscore=[];
-   // var counting;
-   // var countingarray=[];
+    var actualscoresfinal=[];
+
     var socket;
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
     
     socket.emit('RefreshScoreList');
+    socket.emit('RefreshFinalScoreList');
     socket.on("showTable", function() {
         $('#ScoreTable').find("tbody").find("tr").remove();
         $('#FinalScoreTable').find("tbody").find("tr").remove();
@@ -27,6 +27,7 @@ $(function(){
       //  finalscore=[];
 
         socket.emit('RefreshScoreList');
+        socket.emit('RefreshFinalScoreList');
     });
     socket.on("refrr", function() {
         $('#ScoreTable').find("tbody").find("tr").remove();
@@ -35,6 +36,7 @@ $(function(){
      //  countingarray=[];
 
         socket.emit('RefreshScoreList');
+        socket.emit('RefreshFinalScoreList');
     });
     // socket.on("counting", function(ratingtemp) {
     //
@@ -108,23 +110,20 @@ $(function(){
         }
     });
 
-    // socket.on("addingfinalScore", function(ratingfinal) {
-    //     if ($.inArray(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge, ratingfinal) !== -1) {
-    //         console.log();
-    //         var aid="td#id"+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge;
-    //         $(aid).parent().replaceWith('<tr><td id="id' +ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +  ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' +  ratingfinal.type + '</td><td>' +  ratingfinal.head + '</td><td>' +  ratingfinal.clog + '</td><td>' +  ratingfinal.legs + '</td><td>' +  ratingfinal.movement  + '</td></tr>');
-    //
-    //     }
-    //     else {
-    //         if (ratingfinal.type==="00" || ratingfinal.head==="00" || ratingfinal.clog==="00" || ratingfinal.legs==="00" || ratingfinal.movement==="00" ){
-    //             console.log();
-    //         }else{
-    //             $('#ScoreTable').append('<tr><td id="id'+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td></tr>');
-    //             actualscores.push(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge);
-    //         }
-    //
-    //     }
-    // });
+    socket.on("addingfinalScore", function(ratingfinal) {
+        if ($.inArray(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge, ratingfinal) !== -1) {
+            var aid="td#id"+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge;
+            $(aid).parent().replaceWith('<tr><td id="id' +ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +  ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' +  ratingfinal.type + '</td><td>' +  ratingfinal.head + '</td><td>' +  ratingfinal.clog + '</td><td>' +  ratingfinal.legs + '</td><td>' +  ratingfinal.movement  + '</td></tr>');
+
+        }
+        else {
+
+                $('#FinalScoreTable').append('<tr><td id="id'+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
+                actualscoresfinal.push(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge);
+            }
+
+
+    });
 
 
 });
