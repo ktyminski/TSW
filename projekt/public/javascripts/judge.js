@@ -12,6 +12,7 @@ var socket;
 var unrated;
 var actualstring;
 
+
 $(function() {
 
     //logged as:
@@ -27,11 +28,12 @@ $(function() {
         firstparam=param;
 
     socket.on("checkingJudge", function () {
+        console.log("1");
        socket.emit('CheckJudge', param);
     });
 
     socket.on("checkedJudge", function (param,atournamenttemp) {
-
+        console.log("2");
         $('#JudgeWarning').text("");
 
 
@@ -44,10 +46,13 @@ $(function() {
                 socket.emit('RefreshJudgePanel', name, atournamenttemp, param);
 
             }
+
         }
+
 
     });
     socket.on("Warning", function (name,tourjudge) {
+        console.log("3");
         for (var i=0;i<tourjudge.length;i++) {
 
             if (param === tourjudge[i]) {
@@ -66,16 +71,19 @@ $(function() {
         }
     });
 
-    socket.on("TournamentEnd", function (){
-
+    socket.on("TournamentEnd", function (tournamentcode) {
+        if (tournamentcode === tournament) {
+        
         $('#JudgeTable').find("tbody").find("tr").remove();
-        actualstring="";
+        actualstring = "";
+       }
 
     });
 
 
 
     socket.on("addingJudgePanel", function (temporary, positonselector, params) {
+        console.log("5");
         if (firstparam === params) {
 
         for (var i=0;i<temporary.judges.length;i++)

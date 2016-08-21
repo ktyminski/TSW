@@ -28,7 +28,10 @@ var Judge = require('./models/judgemodel');
 var Group = require('./models/groupmodel');
 var Rating = require('./models/ratingmodel');
 var Tournament = require('./models/tournamentmodel');
+var FinalRating = require('./models/finalratingmodel');
 var aTournament = require('./models/atournamentmodel');
+var Account = require('./models/account');
+
 
 
 app.use('javascripts/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
@@ -51,7 +54,7 @@ app.use(flash());
 
 app.set('view engine', 'jade');
 
-var Account = require('./models/account');
+
 
 passport.use(new LocalStrategy(Account.authenticate()));
 
@@ -84,10 +87,11 @@ db.once('open', function () {
 var LoggedAdmin = function() {
     return function(req, res, next) {
         if(req.user){
-            if (req.user.role === 'admin'){                next();
+            if (req.user.role === 'admin'){
+                next();
             }
-            else{   res.redirect('/loginerror');}
-        }else{ res.redirect('/loginerror');}
+            else{   res.redirect('/login');}
+        }else{ res.redirect('/login');}
 
     };
 };
@@ -99,37 +103,39 @@ var LoggedJudge = function() {
                 next();
                 return req.user.username;
             }
-            else{ res.redirect('/loginerror');}
+            else{ res.redirect('/login');}
 
-        }else{            res.redirect('/loginerror');}
+        }else{            res.redirect('/login');}
     };
 };
 //-------------------------------------SOCKET------------------------------
 //-------------------------------------HORSE----------------------------------
 io.sockets.on("connection", function (socket) {
 
+    var countingarray=[];
+    var actualscoresfinal =[];
+    var counting;
+    var finalscore=[];
+
     socket.on("RefreshScoreList", function(){
         
         Rating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
                 var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                
                 io.emit("addingScore", ratingtemp);
-                io.emit('counting', ratingtemp);
             });
 
 
         });
     });
 
+
     socket.on("newHorse", function(newHorse){
-        var hh = new Horse({name:newHorse.name, sex:newHorse.sex, owner:newHorse.owner});
+        var hh = new Horse({name:newHorse.name,realname:newHorse.realname, sex:newHorse.sex, owner:newHorse.owner});
         hh.save(function () {
 
         });
     });
-
-
     socket.on("newJudge", function(newJudge){
         var jj = new Judge({name:newJudge.name, surname:newJudge.surname, code:newJudge.code});
         Account.register(new Account({ username : newJudge.code, role: "judge" }), newJudge.surname, function(err, account) {});
@@ -159,7 +165,7 @@ io.sockets.on("connection", function (socket) {
     socket.on("RefreshList", function(){
         Horse.find({},function(err, horses) {
             horses.forEach(function(horse1) {
-                var horsetemp = {name:horse1.name, sex:horse1.sex, owner:horse1.owner};
+                var horsetemp = {name:horse1.name,realname:horse1.realname ,sex:horse1.sex, owner:horse1.owner};
                 io.emit("addingHorse", horsetemp);
             });
         });
@@ -261,9 +267,10 @@ io.sockets.on("connection", function (socket) {
         io.emit("deletedTournament");
     });
     socket.on("deleteaTournament", function(tournamentcode) {
+        console.log(tournamentcode);
         aTournament.find({name: tournamentcode}).remove().exec();
         io.emit("deletedaTournament");
-        io.emit("TournamentEnd");
+        io.emit("TournamentEnd",tournamentcode);
     });
     socket.on("AddRecords", function(name,city,groups){
         var tournamenttemp;
@@ -323,7 +330,6 @@ io.sockets.on("connection", function (socket) {
         var tourjudge;
         var grouptemp;
         var grouprank=[];
-        var errorstring;
         var tourjud;
         var tourhor;
         var actgrp=actualgroup;
@@ -331,11 +337,13 @@ io.sockets.on("connection", function (socket) {
         var info =str.length;
 
         if(actualgroup === str[info-1] ){
-            console.log("");
+         console.log();
         }else {
             for (var i = 0; i < info; i++) {
                 if (actualgroup === str[i]) {
                     actualgroup = str[i + 1];
+
+
                     break;
                 }
             }
@@ -371,6 +379,9 @@ io.sockets.on("connection", function (socket) {
                             } else {
                                 tourhorse = (grouptemp.horses);
                                 tourjudge = (grouptemp.judges);
+
+
+
                             }
                         });
                         callback2();
@@ -381,10 +392,7 @@ io.sockets.on("connection", function (socket) {
                     Rating.find({group:actgrp },function(err, ratings) {
                         ratings.forEach(function(rate1) {
                             var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                            grouprank.push(ratingtemp.judge);
-                            if (rate1.type==="00" ||rate1.head==="00" ||rate1.clog==="00" ||rate1.legs==="00" ||rate1.movement==="00"){
-                                errorstring="error";
-                            }
+                            if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
                         });
                         callback3();
                     });
@@ -406,6 +414,7 @@ io.sockets.on("connection", function (socket) {
                                 console.log("");
 
                             } else {
+
                                 tourjud= (grouptemp.horses);
                                 tourhor = (grouptemp.judges);
                             }
@@ -420,14 +429,14 @@ io.sockets.on("connection", function (socket) {
                     throw err;
                 }
 
+              if  (typeof(tourjud) !== "undefined"){
+                  if (grouprank.length === (tourjud.length * tourhor.length)) {
+                      io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
+                      io.emit("checkingJudge");
+                      io.emit("showTable");
 
-                if (grouprank.length===(tourjud.length*tourhor.length) && errorstring!=="error") {
-                    io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
-                    io.emit("checkingJudge");
-                    io.emit("showTable");
-
-                }
-
+                  }
+              }
             });
 
         }
@@ -439,7 +448,6 @@ io.sockets.on("connection", function (socket) {
         var tourjudge;
         var grouptemp;
         var grouprank=[];
-        var errorstring;
 
 
         async.series([
@@ -476,10 +484,8 @@ io.sockets.on("connection", function (socket) {
                 Rating.find({group:actualgroup , horse:actualhorse},function(err, ratings) {
                     ratings.forEach(function(rate1) {
                         var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
-                      grouprank.push(ratingtemp.judge);
-                        if (rate1.type==="00" ||rate1.head==="00" ||rate1.clog==="00" ||rate1.legs==="00" ||rate1.movement==="00"){
-                            errorstring="error";
-                        }
+                        if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
+
                     });
                     callback3();
                 });
@@ -502,19 +508,88 @@ io.sockets.on("connection", function (socket) {
 
                 for (var i=0; i < info; i++) {
                     if (actualhorse === tourhorse[i]) {
-                        if (grouprank.length===tourjudge.length && errorstring!=="error"){
+                        if (grouprank.length===tourjudge.length){
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
-                        io.emit("checkingJudge");
+                            io.emit("checkingJudge");
                             io.emit("showTable");
+
+
                         break;
+
                         }
 
                     }
                 }
+
             }
         });
     });
+    socket.on("EndTournament", function(name,city,groups,actualgroup, actualhorse) {
+        var grouptemp;
+        var horses;
+        var grouprank=[];
+        var str = groups.split(",");
+        var info =str.length;
+        var judges;
+
+
+        async.series([
+
+            function(callback1) {
+
+                Group.find({name:actualgroup},function(err, groups) {
+                    groups.forEach(function(group1) {
+
+                        grouptemp = {
+                            name: group1.name,
+                            type: group1.type,
+                            horses: group1.horses,
+                            judges: group1.judges
+                        };
+
+                        horses=grouptemp.horses;
+                        judges=(grouptemp.judges);
+
+                    });
+
+                });
+
+
+            callback1();
+            },
+            function (callback2) {
+
+
+                Rating.find({group:actualgroup , horse:actualhorse},function(err, ratings) {
+                    ratings.forEach(function(rate1) {
+                        var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse,judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+                        if (ratingtemp.tournament === name){grouprank.push(ratingtemp.judge);}else{grouprank[0]="0";}
+                    });
+                    callback2();
+                });
+
+
+            }
+        ], function(err) {
+            if (err) {
+                throw err;
+
+
+            }
+            
+              //3 warunki ostatnia grupa, ostatni kon i wszystkie oceny i bangladesz
+            if (actualgroup.valueOf()===str[info-1].valueOf() && actualhorse.valueOf()===horses[horses.length-1].valueOf() && grouprank.length===judges.length){
+                var tourjudge=null;
+                io.emit("EndOfTournament",name,tourjudge);
+                io.emit("showTable");
+                io.emit("TournamentEnd",name);
+            }
+
+        });
+    });
+    
+
     socket.on("NextActualWarning", function(name,city,groups,actualgroup){
         var tournamenttemp;
         var tourgroup;
@@ -570,6 +645,7 @@ io.sockets.on("connection", function (socket) {
         async.series([
             function(callback) {
                 Rating.find({}).remove().exec();
+                FinalRating.find({}).remove().exec();
                 callback();
             }
 
@@ -593,23 +669,108 @@ io.sockets.on("connection", function (socket) {
 
     });
 
-    socket.on("NewRatingServer",function(ratingsnew) {
-        var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
-        socket.emit('RefreshScoreList');
-        hh.save(function () {
+
+
+
+    socket.on("AddFinalScore", function()
+    {
+        Rating.find({},function(err, ratings) {
+            ratings.forEach(function(rate1) {
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+               io.emit("countingscoreadmin", ratingtemp);
+            });
+
+
+     });
+    });
+
+    socket.on("countingscore", function(ratingtemp)
+    {
+
+        if (actualscoresfinal.indexOf(ratingtemp._id)>-1) {
+            console.log();
+                            }
+                            else {
+                                actualscoresfinal.push(ratingtemp._id);
+                                if (finalscore.indexOf(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse)>-1){
+
+                                    for (var i=0;i<countingarray.length;i++){
+                                        if(countingarray[i].tournament+countingarray[i].group+countingarray[i].horse===ratingtemp.tournament + ratingtemp.group + ratingtemp.horse){
+                                            var value1=parseFloat(countingarray[i].type)+parseFloat(ratingtemp.type);
+                                            var value2=parseFloat(countingarray[i].head)+parseFloat(ratingtemp.head);
+                                            var value3=parseFloat(countingarray[i].clog)+parseFloat(ratingtemp.clog);
+                                            var value4=parseFloat(countingarray[i].legs)+parseFloat(ratingtemp.legs);
+                                            var value5=parseFloat(countingarray[i].movement)+parseFloat(ratingtemp.movement);
+                                            var all=value1+value2+value3+value4+value5;
+                                            countingarray[i].type=(value1);
+                                            countingarray[i].head=(value2);
+                                            countingarray[i].clog=(value3);
+                                            countingarray[i].legs=(value4);
+                                            countingarray[i].movement=(value5);
+                                            countingarray[i].all=(all);
+                                            countingarray[i].counter=countingarray[i].counter+1;
+                                            break;
+                                        }
+                                    }
+                                }else{
+
+
+                                    counting =({tournament:ratingtemp.tournament,group:ratingtemp.group, horse: ratingtemp.horse, type: ratingtemp.type ,head: ratingtemp.head , clog: ratingtemp.clog , legs: ratingtemp.legs ,movement: ratingtemp.movement,all:parseFloat(ratingtemp.type)+parseFloat(ratingtemp.head)+parseFloat(ratingtemp.clog)+parseFloat(ratingtemp.legs) +parseFloat(ratingtemp.movement), counter:1});
+                                    countingarray.push(counting);
+
+                                    finalscore.push(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
+
+
+                                }
+                            }
+
+              //  var some=$('#FinalScoreTable');
+             //  some.find("tbody").find("tr").remove();
+                for (var j=0;j<countingarray.length;j++){
+
+                    var finalsave = new FinalRating({id:countingarray[j].tournament+countingarray[j].group+countingarray[j].horse, tournament:countingarray[j].tournament,group:countingarray[j].group, horse: countingarray[j].horse, type:countingarray[j].type/countingarray[j].counter, head:countingarray[j].head/countingarray[j].counter,clog:countingarray[j].clog/countingarray[j].counter,legs:countingarray[j].legs/countingarray[j].counter,movement:countingarray[j].movement/countingarray[j].counter, all:countingarray[j].all/countingarray[j].counter});
+                    finalsave.save(function () {
+
+                    });
+                  //  some.append('<tr><td id="id'+countingarray[j].tournament+countingarray[j].group+countingarray[j].horse +'">' +countingarray[j].tournament + '</td><td>' +countingarray[j].group + '</td><td>' + countingarray[j].horse + '</td><td>' + countingarray[j].type/countingarray[j].counter + '</td><td>' + countingarray[j].head/countingarray[j].counter + '</td><td>' + countingarray[j].clog/countingarray[j].counter + '</td><td>' + countingarray[j].legs/countingarray[j].counter + '</td><td>' + countingarray[j].movement/countingarray[j].counter + '</td><td>' + countingarray[j].all/countingarray[j].counter + '</td></tr>');
+                  //  socket.emit("addfinalscores",counting);
+
+
+                }
+
+            });
+
+
+
+    socket.on("RefreshFinalScoreList", function(){
+
+        FinalRating.find({},function(err, ratings) {
+            ratings.forEach(function(rate1) {
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+
+                io.emit("addingfinalScore", ratingtemp);
+                // io.emit('counting', ratingtemp);
+            });
+
 
         });
-
     });
+
+
+
+    // socket.on("NewRatingServer",function(ratingsnew) {
+    //     var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
+    //     socket.emit('RefreshScoreList');
+    //     hh.save(function () {
+    //
+    //     });
+
+    //});
     socket.on("UpdateRatingServer", function(ratingsnew){
-        Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true,upsert: true}, function(){});
+        Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true, upsert: true}, function(){});
         socket.emit('RefreshScoreList');
 
     });
-    
-    // socket.on("pushtables",function(){
-    //    
-    // });
 
 
 
@@ -624,9 +785,9 @@ app.get('/', function (req, res) {
     //res.sendFile(__dirname + '/public/index.ejs');
     res.render(__dirname + '/public/index.ejs');
 });
-app.get('/loginerror', function (req, res) {
-    res.render(__dirname + '/public/loginerror.ejs');
-});
+//app.get('/loginerror', function (req, res) {
+    //res.render(__dirname + '/public/loginerror.ejs');
+//});
 app.get('/register',LoggedAdmin(), function(req, res) {
     res.render('register', { });
 });
@@ -654,7 +815,7 @@ app.get('/login', function(req, res) {
 });
 app.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    res.redirect('/login');
 });
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
@@ -663,7 +824,7 @@ app.get('/admin', LoggedAdmin(), function (req, res) {
     res.sendFile(__dirname + '/public/admin.html');
 });
 app.get('/judge', LoggedJudge(), function (req, res) {
-   // res.sendFile(__dirname + '/public/judge.html');
+   // res.sendFile(__dirname + '/public/judge.ejs');
     res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});
 });
 

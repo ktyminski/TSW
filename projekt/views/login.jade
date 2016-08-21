@@ -1,7 +1,6 @@
 extends layout
 
 block content
-    if (!user)
         .container
             h1 Login
             form(id="formsLogin" role='form', action="/login",method="post", style='max-width: 300px;')
@@ -12,6 +11,6 @@ block content
                 button.btn.btn-success(type='submit' style="margin: 10px;") Login
                 a.btn.btn-danger(href="/" type="button") Cancel
 
-    if (user)
+    //if (user)
         a.btn.btn-success(href="/logout" style="margin: 10px;") Logout
         a.btn.btn-danger(href="/" type="button") Cancel

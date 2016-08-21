@@ -19,7 +19,7 @@
     <a href="/" class="btn btn-info">Spectator</a>
     <a href="/judge" class="btn btn-warning">Jugde</a>
     <a href="/admin" class="btn btn-danger">Admin</a>
-    <a href="/login" class="btn btn-success">Account</a>
+
 
 
 </div>
@@ -152,7 +152,8 @@
             <table id ="HorseListTable" class="table table-bordered">
                 <thead>
                 <tr>
-                    <th class="col-md-2">Title</th>
+                    <th class="col-md-2">Tournament Number</th>
+                    <th class="col-md-2">Name</th>
                     <th class="col-md-2">Sex</th>
                     <th class="col-md-2">Owner</th>
                     <th class="col-md-1"></th>
@@ -201,8 +202,10 @@
                 <div id="newhorseContent">
                     <div class="text-center">
                         <div class="form-group">
-                            <label for="nameInput">Name:</label>
+                            <label for="nameInput">Tournament Number:</label>
                             <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="nameInput">
+                            <label for="realnameInput">Name:</label>
+                            <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="realnameInput">
                             <label for="sexInput">Sex:</label>
                             <select style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="sexInput" id="type" ><option value="Stallion">Stallion</option><option value="Mare">Mare</option></select>
                            <!--// <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="sexInput">-->
@@ -272,7 +275,7 @@
                                 <label for="GroupNameInput">Name:</label>
                                 <input style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="GroupNameInput">
                                 <label for="GroupTypeInput">Type:</label>
-                                <input style="margin: 0 auto;float: none;max-width: 250px;"  type="text" class="form-control" id="GroupTypeInput">
+                                <select style="margin: 0 auto;float: none;max-width: 250px;" type="text" class="form-control" id="GroupTypeInput" ><option value="Stallion">Stallion</option><option value="Mare">Mare</option></select>
                                 <button id="NewGroupButton" style="margin-top:20px" type="button" class="btn btn-default">Create</button>
                             </div>
                         </div>

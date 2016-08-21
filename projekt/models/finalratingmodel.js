@@ -1,8 +1,8 @@
-
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Rating = new Schema({
+var FinalRating = new Schema({
+    id: {type: String, unique: true},
     tournament: String,
     group: String,
     horse: String,
@@ -11,8 +11,9 @@ var Rating = new Schema({
     head: String,
     clog: String,
     legs: String,
-    movement: String
-    
+    movement: String,
+    all: String
+
 });
 
-module.exports = mongoose.model('rating', Rating);
+module.exports = mongoose.model('finalrating', FinalRating);

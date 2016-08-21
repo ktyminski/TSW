@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 
 var Horse = new Schema({
     name: {type: String, unique: true},
+    realname: String,
     sex: String,
     owner: String
 });
