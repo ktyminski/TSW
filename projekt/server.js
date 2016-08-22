@@ -683,7 +683,9 @@ io.sockets.on("connection", function (socket) {
     {
         Rating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
+
                 var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement};
+
                io.emit("countingscoreadmin", ratingtemp);
             });
 
@@ -693,13 +695,15 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("countingscore", function(ratingtemp)
     {
+        console.log(ratingtemp._id);
 
         if (actualscoresfinal.indexOf(ratingtemp._id)>-1) {
-            console.log();
+
                             }
                             else {
                                 actualscoresfinal.push(ratingtemp._id);
                                 if (finalscore.indexOf(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse)>-1){
+                                    console.log(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
 
                                     for (var i=0;i<countingarray.length;i++){
                                         if(countingarray[i].tournament+countingarray[i].group+countingarray[i].horse===ratingtemp.tournament + ratingtemp.group + ratingtemp.horse){
@@ -733,18 +737,20 @@ io.sockets.on("connection", function (socket) {
 
               //  var some=$('#FinalScoreTable');
              //  some.find("tbody").find("tr").remove();
+
                 for (var j=0;j<countingarray.length;j++){
+                    FinalRating.findOneAndUpdate({"id": countingarray[j].tournament+countingarray[j].group+countingarray[j].horse},{"tournament": countingarray[j].tournament, "group": countingarray[j].group, "horse": countingarray[j].horse, "type": countingarray[j].type/countingarray[j].counter,"head": countingarray[j].head/countingarray[j].counter,"clog": countingarray[j].clog/countingarray[j].counter,"legs":countingarray[j].legs/countingarray[j].counter,"movement": countingarray[j].movement/countingarray[j].counter,"all": countingarray[j].all/countingarray[j].counter}, {new: true, upsert: true}, function(){});
 
-                    var finalsave = new FinalRating({id:countingarray[j].tournament+countingarray[j].group+countingarray[j].horse, tournament:countingarray[j].tournament,group:countingarray[j].group, horse: countingarray[j].horse, type:countingarray[j].type/countingarray[j].counter, head:countingarray[j].head/countingarray[j].counter,clog:countingarray[j].clog/countingarray[j].counter,legs:countingarray[j].legs/countingarray[j].counter,movement:countingarray[j].movement/countingarray[j].counter, all:countingarray[j].all/countingarray[j].counter});
-                    finalsave.save(function () {
+                //    var finalsave = new FinalRating({id:countingarray[j].tournament+countingarray[j].group+countingarray[j].horse, tournament:countingarray[j].tournament,group:countingarray[j].group, horse: countingarray[j].horse, type:countingarray[j].type/countingarray[j].counter, head:countingarray[j].head/countingarray[j].counter,clog:countingarray[j].clog/countingarray[j].counter,legs:countingarray[j].legs/countingarray[j].counter,movement:countingarray[j].movement/countingarray[j].counter, all:countingarray[j].all/countingarray[j].counter});
+                  //  finalsave.save(function () {
+                      //  FinalRating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true, upsert: true}, function(){});
 
-                    });
-                  //  some.append('<tr><td id="id'+countingarray[j].tournament+countingarray[j].group+countingarray[j].horse +'">' +countingarray[j].tournament + '</td><td>' +countingarray[j].group + '</td><td>' + countingarray[j].horse + '</td><td>' + countingarray[j].type/countingarray[j].counter + '</td><td>' + countingarray[j].head/countingarray[j].counter + '</td><td>' + countingarray[j].clog/countingarray[j].counter + '</td><td>' + countingarray[j].legs/countingarray[j].counter + '</td><td>' + countingarray[j].movement/countingarray[j].counter + '</td><td>' + countingarray[j].all/countingarray[j].counter + '</td></tr>');
-                  //  socket.emit("addfinalscores",counting);
-
+                   // });
 
                 }
+        io.emit("showTable");
 
+        console.log("koniec czyli countingarray", countingarray);
             });
 
 
@@ -753,7 +759,7 @@ io.sockets.on("connection", function (socket) {
 
         FinalRating.find({},function(err, ratings) {
             ratings.forEach(function(rate1) {
-                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, judge:rate1.judge, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement,all:rate1.all};
+                var ratingtemp = {_id:rate1._id, tournament:rate1.tournament,group:rate1.group, horse:rate1.horse, type:rate1.type, head:rate1.head,clog:rate1.clog,legs:rate1.legs,movement:rate1.movement,all:rate1.all};
                 io.emit("addingfinalScore", ratingtemp);
             });
 

@@ -6,7 +6,6 @@ var FinalRating = new Schema({
     tournament: String,
     group: String,
     horse: String,
-    judge: String,
     type: String,
     head: String,
     clog: String,

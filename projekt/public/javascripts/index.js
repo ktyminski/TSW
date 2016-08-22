@@ -9,19 +9,23 @@ $(function(){
     var id;
     var actualscores=[];
     var actualscoresfinal=[];
+    var tourname=[];
+    var cloneCount = 1;
 
     var socket;
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
-    
+
+
     socket.emit('RefreshScoreList');
     socket.emit('RefreshFinalScoreList');
     socket.on("showTable", function() {
         $('#ScoreTable').find("tbody").find("tr").remove();
         $('#FinalScoreTable').find("tbody").find("tr").remove();
         actualscores=[];
-      //  countingarray=[];
+        actualscoresfinal=[];
+        tourname =[];
       //  actualscoresfinal =[];
       //  counting=0;
       //  finalscore=[];
@@ -33,6 +37,8 @@ $(function(){
         $('#ScoreTable').find("tbody").find("tr").remove();
         $('#FinalScoreTable').find("tbody").find("tr").remove();
         actualscores=[];
+        actualscoresfinal=[];
+        tourname =[];
      //  countingarray=[];
 
         socket.emit('RefreshScoreList');
@@ -111,18 +117,34 @@ $(function(){
     });
 
     socket.on("addingfinalScore", function(ratingfinal) {
-        if ($.inArray(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge, ratingfinal) !== -1) {
-            var aid="td#id"+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge;
-            $(aid).parent().replaceWith('<tr><td id="id' +ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +  ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' +  ratingfinal.type + '</td><td>' +  ratingfinal.head + '</td><td>' +  ratingfinal.clog + '</td><td>' +  ratingfinal.legs + '</td><td>' +  ratingfinal.movement  + '</td></tr>');
 
-        }
-        else {
+            if (actualscoresfinal.indexOf(ratingfinal.tournament + ratingfinal.group + ratingfinal.horse)===-1) {
 
-                $('#FinalScoreTable').append('<tr><td id="id'+ratingfinal.tournament+ratingfinal.group+ratingfinal.horse+ratingfinal.judge+'">' + ratingfinal.tournament + '</td><td>' +ratingfinal.group + '</td><td>' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
-                actualscoresfinal.push(ratingfinal.tournament+ratingfinal.group+ ratingfinal.horse+ratingfinal.judge);
+
+
+
+                if (tourname.indexOf(ratingfinal.tournament)>-1)
+                {
+                    $('#' + ratingfinal.tournament).append('<tr><td id="id' + ratingfinal.tournament + ratingfinal.group + ratingfinal.horse+ '">Group:' + ratingfinal.group + '</td><td>Horse:' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
+
+                    console.log("bangladesz");
+
+                   // $( "#FinalScoreTable" ).clone().appendTo( ".table-responsive" );
+                }else{
+                    $( "#finscore" ).append( '<p>Tournament: '+ratingfinal.tournament+'</p>');
+                    $("#FinalScoreTable").empty().clone().attr('id', ratingfinal.tournament).appendTo( "#finscore" );
+                    $('#' + ratingfinal.tournament).append('<tr><td id="id' + ratingfinal.tournament + ratingfinal.group + ratingfinal.horse+ '">Group:' + ratingfinal.group + '</td><td>Horse:' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
+                    actualscoresfinal.push(ratingfinal.tournament + ratingfinal.group + ratingfinal.horse);
+
+
+
+                }
+                tourname.push(ratingfinal.tournament);
+
+
+
+
             }
-
-
     });
 
 
@@ -165,3 +187,5 @@ $(function(){
     });
 
 })(document);
+
+
