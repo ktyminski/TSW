@@ -658,6 +658,8 @@ io.sockets.on("connection", function (socket) {
 
         ], function() {
             io.emit('refrr');
+            finalscore=[];
+            countingarray=[];
 
         });
     });
@@ -739,8 +741,10 @@ io.sockets.on("connection", function (socket) {
              //  some.find("tbody").find("tr").remove();
 
                 for (var j=0;j<countingarray.length;j++){
+                    console.log(finalscore);
                     FinalRating.findOneAndUpdate({"id": countingarray[j].tournament+countingarray[j].group+countingarray[j].horse},{"tournament": countingarray[j].tournament, "group": countingarray[j].group, "horse": countingarray[j].horse, "type": countingarray[j].type/countingarray[j].counter,"head": countingarray[j].head/countingarray[j].counter,"clog": countingarray[j].clog/countingarray[j].counter,"legs":countingarray[j].legs/countingarray[j].counter,"movement": countingarray[j].movement/countingarray[j].counter,"all": countingarray[j].all/countingarray[j].counter}, {new: true, upsert: true}, function(){});
 
+                    FinalRating.find().sort( { all: 1 } );
                 //    var finalsave = new FinalRating({id:countingarray[j].tournament+countingarray[j].group+countingarray[j].horse, tournament:countingarray[j].tournament,group:countingarray[j].group, horse: countingarray[j].horse, type:countingarray[j].type/countingarray[j].counter, head:countingarray[j].head/countingarray[j].counter,clog:countingarray[j].clog/countingarray[j].counter,legs:countingarray[j].legs/countingarray[j].counter,movement:countingarray[j].movement/countingarray[j].counter, all:countingarray[j].all/countingarray[j].counter});
                   //  finalsave.save(function () {
                       //  FinalRating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true, upsert: true}, function(){});
@@ -750,7 +754,7 @@ io.sockets.on("connection", function (socket) {
                 }
         io.emit("showTable");
 
-        console.log("koniec czyli countingarray", countingarray);
+
             });
 
 

@@ -17,15 +17,48 @@ $(function(){
         socket = io({forceNew: true});
     }
 
+    // $( "#finscore" ).on( "click", function() {
+    //     console.log( $( this ).hide() );
+    //     $( this ).hide();
+//         $('#' + ratingfinal.tournament).hide();
+//     });
+//     $("#show").click(function(){
+//         $("p").show();
+//     });
+// });
 
+   // });
+    $("#finscore").on('click', "p", function() {
+        //console.log( $( this tbody ).text() );
+
+
+        $(this).next().toggle();
+        console.log( $( this).parent().find(".sortable table").text() );
+    });
+    // $('body').on('click', 'Scoretable', function() {
+    //     // do something
+    // });
+    //
+    // for(var i=0;i<tourname.length;i++){
+    //     $('#' + tourname[i]).click(function(){
+    //         $('#' + tourname[i]).hide();
+    //     });
+    //
+    //     $('#' + tourname[i]).click(function(){
+    //         $('#' + tourname[i]).show();
+    //     });
+    // }
+
+
+
+    $("#FinalScoreTable").empty();
     socket.emit('RefreshScoreList');
     socket.emit('RefreshFinalScoreList');
     socket.on("showTable", function() {
         $('#ScoreTable').find("tbody").find("tr").remove();
         $('#FinalScoreTable').find("tbody").find("tr").remove();
         actualscores=[];
-        actualscoresfinal=[];
-        tourname =[];
+       // tourname =[];
       //  actualscoresfinal =[];
       //  counting=0;
       //  finalscore=[];
@@ -38,8 +71,14 @@ $(function(){
         $('#FinalScoreTable').find("tbody").find("tr").remove();
         actualscores=[];
         actualscoresfinal=[];
-        tourname =[];
+
      //  countingarray=[];
+        console.log(tourname.length);
+        for(var i=0;i<tourname.length;i++){
+            $('#' + tourname[i]).remove();
+        }
+        tourname =[];
+
 
         socket.emit('RefreshScoreList');
         socket.emit('RefreshFinalScoreList');
@@ -119,26 +158,25 @@ $(function(){
     socket.on("addingfinalScore", function(ratingfinal) {
 
             if (actualscoresfinal.indexOf(ratingfinal.tournament + ratingfinal.group + ratingfinal.horse)===-1) {
-
+                console.log(actualscoresfinal);
 
 
 
                 if (tourname.indexOf(ratingfinal.tournament)>-1)
                 {
-                    $('#' + ratingfinal.tournament).append('<tr><td id="id' + ratingfinal.tournament + ratingfinal.group + ratingfinal.horse+ '">Group:' + ratingfinal.group + '</td><td>Horse:' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
-
-                    console.log("bangladesz");
+                    console.log();
 
                    // $( "#FinalScoreTable" ).clone().appendTo( ".table-responsive" );
                 }else{
                     $( "#finscore" ).append( '<p>Tournament: '+ratingfinal.tournament+'</p>');
                     $("#FinalScoreTable").empty().clone().attr('id', ratingfinal.tournament).appendTo( "#finscore" );
-                    $('#' + ratingfinal.tournament).append('<tr><td id="id' + ratingfinal.tournament + ratingfinal.group + ratingfinal.horse+ '">Group:' + ratingfinal.group + '</td><td>Horse:' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
-                    actualscoresfinal.push(ratingfinal.tournament + ratingfinal.group + ratingfinal.horse);
+
 
 
 
                 }
+                $('#' + ratingfinal.tournament).append('<tr><td id="id' + ratingfinal.tournament + ratingfinal.group + ratingfinal.horse+ '">Group:' + ratingfinal.group + '</td><td>Horse:' + ratingfinal.horse + '</td><td>' + Number(ratingfinal.type) + '</td><td>' + Number(ratingfinal.head) + '</td><td>' + Number(ratingfinal.clog) + '</td><td>' + Number(ratingfinal.legs) + '</td><td>' + Number(ratingfinal.movement) + '</td><td>' + Number(ratingfinal.all) + '</td></tr>');
+                actualscoresfinal.push(ratingfinal.tournament + ratingfinal.group + ratingfinal.horse);
                 tourname.push(ratingfinal.tournament);
 
 
@@ -149,43 +187,6 @@ $(function(){
 
 
 });
-(function(document) {
 
-    var LightTableFilter = (function(Arr) {
-
-        var _input;
-
-        function _onInputEvent(e) {
-            _input = e.target;
-            var tables = document.getElementsByClassName(_input.getAttribute('data-table'));
-            Arr.forEach.call(tables, function(table) {
-                Arr.forEach.call(table.tBodies, function(tbody) {
-                    Arr.forEach.call(tbody.rows, _filter);
-                });
-            });
-        }
-
-        function _filter(row) {
-            var text = row.textContent.toLowerCase(), val = _input.value.toLowerCase();
-            row.style.display = text.indexOf(val) === -1 ? 'none' : 'table-row';
-        }
-
-        return {
-            init: function() {
-                var inputs = document.getElementsByClassName('light-table-filter');
-                Arr.forEach.call(inputs, function(input) {
-                    input.oninput = _onInputEvent;
-                });
-            }
-        };
-    })(Array.prototype);
-
-    document.addEventListener('readystatechange', function() {
-        if (document.readyState === 'complete') {
-            LightTableFilter.init();
-        }
-    });
-
-})(document);
 
 
