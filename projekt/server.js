@@ -433,7 +433,6 @@ io.sockets.on("connection", function (socket) {
                   if (grouprank.length === (tourjud.length * tourhor.length)) {
                       io.emit("NextGroup", name, city, groups, actualgroup, tourhorse[0], tourjudge);
                       io.emit("checkingJudge");
-                      io.emit("showTable");
 
 
                   }
@@ -513,8 +512,6 @@ io.sockets.on("connection", function (socket) {
                         actualhorse = tourhorse[i + 1];
                         io.emit("NextGroup",name,city,groups, actualgroup, actualhorse, tourjudge);
                             io.emit("checkingJudge");
-                            io.emit("showTable");
-
 
                         break;
 
@@ -587,7 +584,6 @@ io.sockets.on("connection", function (socket) {
                 if (grouprank.length === (judges.length)) {
                     var tourjudge = null;
                     io.emit("EndOfTournament", name, tourjudge);
-                    io.emit("showTable");
                     io.emit("TournamentEnd", name);
 
                 }
@@ -660,6 +656,7 @@ io.sockets.on("connection", function (socket) {
             io.emit('refrr');
             finalscore=[];
             countingarray=[];
+            console.log(countingarray);
 
         });
     });
@@ -700,7 +697,7 @@ io.sockets.on("connection", function (socket) {
         console.log(ratingtemp._id);
 
         if (actualscoresfinal.indexOf(ratingtemp._id)>-1) {
-
+console.log();
                             }
                             else {
                                 actualscoresfinal.push(ratingtemp._id);
@@ -741,7 +738,6 @@ io.sockets.on("connection", function (socket) {
              //  some.find("tbody").find("tr").remove();
 
                 for (var j=0;j<countingarray.length;j++){
-                    console.log(finalscore);
                     FinalRating.findOneAndUpdate({"id": countingarray[j].tournament+countingarray[j].group+countingarray[j].horse},{"tournament": countingarray[j].tournament, "group": countingarray[j].group, "horse": countingarray[j].horse, "type": countingarray[j].type/countingarray[j].counter,"head": countingarray[j].head/countingarray[j].counter,"clog": countingarray[j].clog/countingarray[j].counter,"legs":countingarray[j].legs/countingarray[j].counter,"movement": countingarray[j].movement/countingarray[j].counter,"all": countingarray[j].all/countingarray[j].counter}, {new: true, upsert: true}, function(){});
 
                     FinalRating.find().sort( { all: 1 } );
