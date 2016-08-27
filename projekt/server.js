@@ -65,11 +65,10 @@ passport.deserializeUser(Account.deserializeUser());
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use('/js/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(statics(path.join(__dirname, '/public')));
+app.use(statics(path.join(__dirname, '/')));
 
 app.use('/', routes);
-
+// app.use('/', express.static(__dirname + '/javascripts'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
@@ -768,23 +767,11 @@ console.log();
     });
 
 
-
-    // socket.on("NewRatingServer",function(ratingsnew) {
-    //     var hh = new Rating({title: ratingsnew.string,tournament: ratingsnew.tournament, group: ratingsnew.group, horse: ratingsnew.horse, judge: ratingsnew.judge, type:ratingsnew.type, head: ratingsnew.head, clog:ratingsnew.clog, legs:ratingsnew.legs, movement:ratingsnew.movement});
-    //     socket.emit('RefreshScoreList');
-    //     hh.save(function () {
-    //
-    //     });
-
-    //});
     socket.on("UpdateRatingServer", function(ratingsnew){
         Rating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true, upsert: true}, function(){});
         socket.emit('RefreshScoreList');
 
     });
-
-
-
 });
 
 
@@ -794,13 +781,10 @@ server.listen(serverPort, function() {
 });
 app.get('/', function (req, res) {
     //res.sendFile(__dirname + '/public/index.ejs');
-    res.render(__dirname + '/public/index.ejs');
+    res.sendFile(__dirname + '/views/index.html');
 });
-//app.get('/loginerror', function (req, res) {
-    //res.render(__dirname + '/public/loginerror.ejs');
-//});
 app.get('/register',LoggedAdmin(), function(req, res) {
-    res.render('register', { });
+    res.sendFile(__dirname + '/views/register.html', { });
 });
 app.post('/login', passport.authenticate('local'), function(req, res) {
     if (req.user.role==="judge"){
@@ -814,7 +798,7 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
 app.post('/register', LoggedAdmin(), function(req, res) {
     Account.register(new Account({ username : req.body.username, role: req.body.role }), req.body.password, function(err, account) {
         if (err) {
-            return res.render('register', { account : account });
+            return res.sendFile(__dirname + '/views/register.html', { account : account });
         }
         res.redirect('/login');
 
@@ -822,24 +806,22 @@ app.post('/register', LoggedAdmin(), function(req, res) {
 });
 
 app.get('/login', function(req, res) {
-    res.render('login', { user : req.user });
+    res.sendFile(__dirname + '/views/login.html', { user : req.user });
 });
 app.get('/logout', function(req, res) {
     req.logout();
     res.redirect('/login');
 });
 app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/public/index.html');
+    res.sendFile(__dirname + '/views/index.html');
 });
 app.get('/admin', LoggedAdmin(), function (req, res) {
-    res.sendFile(__dirname + '/public/admin.html');
+    res.sendFile(__dirname + '/views/admin.html');
 });
 app.get('/judge', LoggedJudge(), function (req, res) {
-   // res.sendFile(__dirname + '/public/judge.ejs');
-    res.render(__dirname + '/public/judge.ejs', {judgecode: req.user.username});
+   // res.sendFile(__dirname + '/views/judge.ejs');
+    res.render(__dirname + '/views/judge.ejs', {judgecode: req.user.username});
 });
-
-
 
 module.exports = app;
 

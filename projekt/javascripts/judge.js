@@ -2,7 +2,9 @@
  * Created by Karol on 30.05.2016.
  */
 /* global io: true */
-"use strict";
+/* globals $:false */
+/* globals console:false*/
+
 var tournament;
 var group;
 var horse;
@@ -14,6 +16,7 @@ var actualstring;
 
 
 $(function() {
+    "use strict";
 
     //logged as:
     //alert($("#logged").text());

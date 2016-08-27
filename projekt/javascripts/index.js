@@ -2,24 +2,27 @@
  * Created by Karol on 30.05.2016.
  */
 /* global io: true */
-"use strict";
-
-
+/* globals $:false */
+/* globals console:false*/
 
 
 $(function(){
+    "use strict";
 
     var id;
     var actualscores=[];
     var actualscoresfinal=[];
     var tourname=[];
+    var finscor="#finscore";
+    var scoretab='#ScoreTable';
+    var finscoretab='#FinalScoreTable';
 
     var socket;
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
     }
 
-    $("#finscore").on('click', "p", function() {
+    $(finscor).on('click', "p", function() {
         $(this).next().toggle();
     });
 
@@ -28,15 +31,15 @@ $(function(){
     socket.emit('RefreshScoreList');
     socket.emit('RefreshFinalScoreList');
     socket.on("showTable", function() {
-        $('#ScoreTable').find("tbody").find("tr").remove();
-        $('#FinalScoreTable').find("tbody").find("tr").remove();
+        $(scoretab).find("tbody").find("tr").remove();
+        $(finscoretab).find("tbody").find("tr").remove();
         actualscores=[];
         socket.emit('RefreshScoreList');
         socket.emit('RefreshFinalScoreList');
     });
     socket.on("refrr", function() {
-        $('#ScoreTable').find("tbody").find("tr").remove();
-        $('#FinalScoreTable').find("tbody").find("tr").remove();
+        $(scoretab).find("tbody").find("tr").remove();
+        $(finscoretab).find("tbody").find("tr").remove();
         actualscores=[];
         actualscoresfinal=[];
 
@@ -64,7 +67,7 @@ $(function(){
             if (ratingtemp.type==="00" || ratingtemp.head==="00" || ratingtemp.clog==="00" || ratingtemp.legs==="00" || ratingtemp.movement==="00" ){
                 console.log();
             }else{
-            $('#ScoreTable').append('<tr><td id="id'+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge+'">' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
+            $(scoretab).append('<tr><td id="id'+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge+'">' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
             actualscores.push(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ratingtemp.judge);
                // $('#ScoreTable').trigger("update");
                // $('#ScoreTable').tablesorter( {sortList: [[7,1]]} );
@@ -88,10 +91,10 @@ $(function(){
 
                    // $( "#FinalScoreTable" ).clone().appendTo( ".table-responsive" );
                 }else{
-                    $( "#finscore" ).append( '<p>Tournament: '+ratingfinal.tournament+'</p>');
-                    $("#FinalScoreTable").show();
-                    $("#FinalScoreTable").clone().attr('id', ratingfinal.tournament).appendTo( "#finscore" );
-                    $("#FinalScoreTable").hide();
+                    $( finscor).append( '<p>Tournament: '+ratingfinal.tournament+'</p>');
+                    $(finscoretab).show();
+                    $(finscoretab).clone().attr('id', ratingfinal.tournament).appendTo( "#finscore" );
+                    $(finscoretab).hide();
 
 
                 }
