@@ -18,8 +18,6 @@ var actualstring;
 $(function() {
     "use strict";
 
-    //logged as:
-    //alert($("#logged").text());
 
     if (!socket || !socket.connected) {
         socket = io({forceNew: true});
@@ -36,7 +34,7 @@ $(function() {
     });
 
     socket.on("checkedJudge", function (param,atournamenttemp) {
-        console.log("2");
+        console.log(atournamenttemp);
         $('#JudgeWarning').text("");
 
 

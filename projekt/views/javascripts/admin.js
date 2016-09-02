@@ -221,10 +221,10 @@ $(function(){
     horselisttable.on('click', '.btn.btn-danger', function () {
         var name = $(this).closest('tr').find('td:eq(0)').text();
         //$(this).closest('tr').find('td:eq(0)').html('<input id="input1" type="text" value="'+name+'" />');
-        var sex = $(this).closest('tr').find('td:eq(1)').text();
-        $(this).closest('tr').find('td:eq(1)').html('<input id="input2" type="text" value="'+sex+'" />');
-        var owner = $(this).closest('tr').find('td:eq(2)').text();
-        $(this).closest('tr').find('td:eq(2)').html('<input id="input3" type="text" value="'+owner+'" />');
+        var sex = $(this).closest('tr').find('td:eq(2)').text();
+        $(this).closest('tr').find('td:eq(2)').html('<select id="input2"><option value="Stallion">Stallion</option><option value="Mare">Mare</option></select>');
+        var owner = $(this).closest('tr').find('td:eq(3)').text();
+        $(this).closest('tr').find('td:eq(3)').html('<input id="input3" type="text" value="'+owner+'" />');
 
        var temp = '#EditHorseButton'+name;
         $(temp).val("Save");
@@ -245,8 +245,8 @@ $(function(){
        // $(this).closest('tr').find('td:eq(0)').html('<input id="input1" type="text" value="'+code+'" />');
         var name = $(this).closest('tr').find('td:eq(1)').text();
         $(this).closest('tr').find('td:eq(1)').html('<input id="input2" type="text" value="'+name+'" />');
-        var surname = $(this).closest('tr').find('td:eq(2)').text();
-        $(this).closest('tr').find('td:eq(2)').html('<input id="input3" type="text" value="'+surname+'" />');
+        // var surname = $(this).closest('tr').find('td:eq(2)').text();
+        // $(this).closest('tr').find('td:eq(2)').html('<input id="input3" type="text" value="'+surname+'" />');
 
         var temp = '#EditJudgeButton'+code;
         $(temp).val("Save");

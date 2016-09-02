@@ -16,8 +16,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var logger = require('morgan');
 var flash = require('connect-flash');
-var routes = require('./routes/index');
-var users = require('./routes/users');
+
 
 var options = {
     key: fs.readFileSync('ssl/key.pem'),
@@ -35,7 +34,7 @@ var Account = require('./models/account');
 
 
 app.use('javascripts/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(statics(path.join(__dirname, '/public')));
+app.use(statics(path.join(__dirname, '/views')));
 
 var serverPort = 443;
 
@@ -43,7 +42,7 @@ var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
 
-app.use(require('serve-static')(__dirname + '/../../public'));
+app.use(require('serve-static')(__dirname + '/../../views'));
 app.use(require('cookie-parser')());
 //-------------------------------------------------------passport
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
@@ -51,8 +50,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-
-app.set('view engine', 'jade');
 
 
 
@@ -65,10 +62,9 @@ passport.deserializeUser(Account.deserializeUser());
 var port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(statics(path.join(__dirname, '/')));
+app.use(statics(path.join(__dirname, '/views')));
 
-app.use('/', routes);
-// app.use('/', express.static(__dirname + '/javascripts'));
+// app.use('/', routes);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 
@@ -251,6 +247,7 @@ io.sockets.on("connection", function (socket) {
     });
     socket.on("deleteJudge", function(judgecode) {
         Judge.find({code: judgecode}).remove().exec();
+        Account.find({username: judgecode}).remove().exec();
         io.emit("deletedJudge");
     });
     socket.on("deleteHorse", function(horsecode) {
@@ -297,12 +294,9 @@ io.sockets.on("connection", function (socket) {
                     groups.forEach(function(group1) {
 
                         grouptemp = {name:group1.name, type:group1.type, horses:group1.horses, judges:group1.judges};
-                       // if (tourgroup.indexof(group1.horses) > -1) {
-
-                       // } else {
                             tourhorse=(grouptemp.horses);
                             tourjudge=(grouptemp.judges);
-                       // }
+
                     });
 
                     callback2();
@@ -314,10 +308,7 @@ io.sockets.on("connection", function (socket) {
                 throw err;
 
             }
-
             io.emit("FinalAddingTour",name,city,groups, tourgroup[0], tourhorse[0], tourjudge);
-            // io.emit("RefreshingJudge",tourjudge);
-          //  io.emit("CheckJudge",name,tourjudge);
             io.emit("checkingJudge");
 
         });
@@ -410,7 +401,7 @@ io.sockets.on("connection", function (socket) {
                                 judges: group1.judges
                             };
                             if (tourgroup.indexOf(group1.horses) > -1) {
-                                console.log("");
+                                console.log();
 
                             } else {
 
@@ -575,13 +566,13 @@ io.sockets.on("connection", function (socket) {
 
             }
             
-              //3 warunki ostatnia grupa, ostatni kon i wszystkie oceny i bangladesz
+
             if (actualgroup.valueOf()===str[info-1].valueOf() && actualhorse.valueOf()===horses[horses.length-1].valueOf() && grouprank.length===judges.length){
                 console.log(horses.length);
                 console.log(judges.length);
                 console.log(grouprank.length);
                 if (grouprank.length === (judges.length)) {
-                    var tourjudge = null;
+                    var tourjudge = "nojudge";
                     io.emit("EndOfTournament", name, tourjudge);
                     io.emit("TournamentEnd", name);
 
@@ -633,10 +624,7 @@ io.sockets.on("connection", function (socket) {
             if (err) {
                 throw err;
 
-
             }
-
-
             io.emit("Warning",name,tourjudge);
 
 
@@ -693,15 +681,15 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("countingscore", function(ratingtemp)
     {
-        console.log(ratingtemp._id);
+        console.log();
 
         if (actualscoresfinal.indexOf(ratingtemp._id)>-1) {
-console.log();
+                console.log();
                             }
                             else {
                                 actualscoresfinal.push(ratingtemp._id);
                                 if (finalscore.indexOf(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse)>-1){
-                                    console.log(ratingtemp.tournament + ratingtemp.group + ratingtemp.horse);
+                                    console.log();
 
                                     for (var i=0;i<countingarray.length;i++){
                                         if(countingarray[i].tournament+countingarray[i].group+countingarray[i].horse===ratingtemp.tournament + ratingtemp.group + ratingtemp.horse){
@@ -733,19 +721,10 @@ console.log();
                                 }
                             }
 
-              //  var some=$('#FinalScoreTable');
-             //  some.find("tbody").find("tr").remove();
-
                 for (var j=0;j<countingarray.length;j++){
                     FinalRating.findOneAndUpdate({"id": countingarray[j].tournament+countingarray[j].group+countingarray[j].horse},{"tournament": countingarray[j].tournament, "group": countingarray[j].group, "horse": countingarray[j].horse, "type": countingarray[j].type/countingarray[j].counter,"head": countingarray[j].head/countingarray[j].counter,"clog": countingarray[j].clog/countingarray[j].counter,"legs":countingarray[j].legs/countingarray[j].counter,"movement": countingarray[j].movement/countingarray[j].counter,"all": countingarray[j].all/countingarray[j].counter}, {new: true, upsert: true}, function(){});
 
                     FinalRating.find().sort( { all: 1 } );
-                //    var finalsave = new FinalRating({id:countingarray[j].tournament+countingarray[j].group+countingarray[j].horse, tournament:countingarray[j].tournament,group:countingarray[j].group, horse: countingarray[j].horse, type:countingarray[j].type/countingarray[j].counter, head:countingarray[j].head/countingarray[j].counter,clog:countingarray[j].clog/countingarray[j].counter,legs:countingarray[j].legs/countingarray[j].counter,movement:countingarray[j].movement/countingarray[j].counter, all:countingarray[j].all/countingarray[j].counter});
-                  //  finalsave.save(function () {
-                      //  FinalRating.findOneAndUpdate({"tournament": ratingsnew.tournament,"group": ratingsnew.group,"horse": ratingsnew.horse,"judge": ratingsnew.judge},{"type": ratingsnew.type, "head": ratingsnew.head, "clog": ratingsnew.clog, "legs": ratingsnew.legs,"movement": ratingsnew.movement}, {new: true, upsert: true}, function(){});
-
-                   // });
-
                 }
         io.emit("showTable");
 
@@ -780,7 +759,6 @@ server.listen(serverPort, function() {
     console.log('server up and running at %s port', serverPort);
 });
 app.get('/', function (req, res) {
-    //res.sendFile(__dirname + '/public/index.ejs');
     res.sendFile(__dirname + '/views/index.html');
 });
 app.get('/register',LoggedAdmin(), function(req, res) {
@@ -793,7 +771,6 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
         res.redirect('/admin');
 
     }
-
 });
 app.post('/register', LoggedAdmin(), function(req, res) {
     Account.register(new Account({ username : req.body.username, role: req.body.role }), req.body.password, function(err, account) {
@@ -819,7 +796,6 @@ app.get('/admin', LoggedAdmin(), function (req, res) {
     res.sendFile(__dirname + '/views/admin.html');
 });
 app.get('/judge', LoggedJudge(), function (req, res) {
-   // res.sendFile(__dirname + '/views/judge.ejs');
     res.render(__dirname + '/views/judge.ejs', {judgecode: req.user.username});
 });
 

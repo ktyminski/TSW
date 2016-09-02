@@ -26,8 +26,7 @@ $(function(){
         $(this).next().toggle();
     });
 
-
-    //$("#FinalScoreTable").empty();
+    
     socket.emit('RefreshScoreList');
     socket.emit('RefreshFinalScoreList');
     socket.on("showTable", function() {
@@ -69,8 +68,6 @@ $(function(){
             }else{
             $(scoretab).append('<tr><td id="id'+ratingtemp.tournament+ratingtemp.group+ratingtemp.horse+ratingtemp.judge+'">' + ratingtemp.tournament + '</td><td>' +ratingtemp.group + '</td><td>' + ratingtemp.horse + '</td><td>' + Number(ratingtemp.type) + '</td><td>' + Number(ratingtemp.head) + '</td><td>' + Number(ratingtemp.clog) + '</td><td>' + Number(ratingtemp.legs) + '</td><td>' + Number(ratingtemp.movement) + '</td></tr>');
             actualscores.push(ratingtemp.tournament+ratingtemp.group+ ratingtemp.horse+ratingtemp.judge);
-               // $('#ScoreTable').trigger("update");
-               // $('#ScoreTable').tablesorter( {sortList: [[7,1]]} );
             }
 
         }
@@ -88,8 +85,7 @@ $(function(){
                 {
                     console.log();
 
-
-                   // $( "#FinalScoreTable" ).clone().appendTo( ".table-responsive" );
+                    
                 }else{
                     $( finscor).append( '<p>Tournament: '+ratingfinal.tournament+'</p>');
                     $(finscoretab).show();
