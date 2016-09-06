@@ -22,9 +22,32 @@ $(function(){
         socket = io({forceNew: true});
     }
 
+
     $(finscor).on('click', "p", function() {
         $(this).next().toggle();
     });
+    $('#table1').on('click', "h2", function() {
+        $(this).next().toggle();
+    });
+    $('#table2').on('click', "h2", function() {
+        $(this).next().toggle();
+    });
+
+
+    // var specialElementHandlers = {
+    //     '#editor': function (element, renderer) {
+    //         return true;
+    //     }
+    // };
+    //
+    // $('#export').click(function () {
+    //     var doc = new jsPDF(('p', 'in', 'letter'));
+    //     doc.fromHTML($('#table1').get(0), 15, 15, {
+    //         'width': 100,
+    //         'elementHandlers': specialElementHandlers
+    //     });
+    //     doc.save('scores.pdf');
+    // });
 
     
     socket.emit('RefreshScoreList');
@@ -115,4 +138,3 @@ $(function(){
    });
 
 });
-

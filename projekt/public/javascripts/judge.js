@@ -159,6 +159,7 @@ $(function() {
 
  });
 function changedetected() {
+    'use strict';
     var ratings = {tournament:tournament, group:group, horse:horse,judge:param, type: $('#type').val(), head: $('#head').val(), clog:$('#clog').val(), legs: $('#legs').val(),movement: $('#movement').val()};
     console.log(ratings);
     unrated ={type:ratings.type,head:ratings.head, clog:ratings.clog, legs:ratings.legs, movement:ratings.movement};

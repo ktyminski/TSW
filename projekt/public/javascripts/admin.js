@@ -245,15 +245,15 @@ $(function(){
        // $(this).closest('tr').find('td:eq(0)').html('<input id="input1" type="text" value="'+code+'" />');
         var name = $(this).closest('tr').find('td:eq(1)').text();
         $(this).closest('tr').find('td:eq(1)').html('<input id="input2" type="text" value="'+name+'" />');
-        // var surname = $(this).closest('tr').find('td:eq(2)').text();
+         var surname = $(this).closest('tr').find('td:eq(2)').text();
         // $(this).closest('tr').find('td:eq(2)').html('<input id="input3" type="text" value="'+surname+'" />');
 
         var temp = '#EditJudgeButton'+code;
         $(temp).val("Save");
         $(temp).click(function(){
             var newname = $('#input2').val();
-            var newsurname = $('#input3').val();
-            var UpdateJudge = {id:code, code:code, name:newname, surname:newsurname};
+            // var newsurname = $('#input3').val();
+            var UpdateJudge = {id:code, code:code, name:newname, surname:surname};
             console.log(UpdateJudge);
 
             socket.emit("UpdateJudge", UpdateJudge);

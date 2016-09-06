@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spectator Site</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
-    <script src="javascripts/index.js"></script>
-    <script src="javascripts/socket.io.js"></script>
-    <script type="text/javascript" src="javascripts/jquery.tablesorter.js"></script>
+    <script src="../javascripts/index.js"></script>
+    <script src="../javascripts/socket.io.js"></script>
+    <script type="text/javascript" src="../javascripts/jquery.tablesorter.js"></script>
+
 
 </head>
 <body style="padding:4%">
@@ -22,16 +23,14 @@
 </div>
 
 
-
-
-
 <!-- ---------------------------------------->
 <div id="indexContent">
+
     <div style="padding:20px" class="jumbotron">
+
+
         <div id="Horses">
-
-
-
+        <div id="table1">
                 <h2 style="text-align: center;">Counted Scores</h2>
             <div class="table-responsive" id="finscore">
 
@@ -55,7 +54,9 @@
 
                 </table>
 
+                </div>
          </div>
+            <div id="table2">
             <h2 style="text-align: center;">All Scores</h2>
             <div class="table-responsive">
             <table id="ScoreTable" class="table table-bordered">
@@ -75,6 +76,7 @@
                 <tbody>
                 </tbody>
             </table>
+            </div>
             </div>
         </div>
         </div>

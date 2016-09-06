@@ -7,15 +7,12 @@ var app = express();
 var path = require('path');
 var fs = require('fs');
 var https = require('https');
-var http = require('http');
 var mongoose = require('mongoose');
 var statics = require('serve-static');
 var async = require('async');
 var waterfall = require('async-waterfall');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var logger = require('morgan');
-var flash = require('connect-flash');
 
 
 var options = {
@@ -32,26 +29,18 @@ var aTournament = require('./models/atournamentmodel');
 var Account = require('./models/account');
 
 
-
-app.use('javascripts/jquery.min.js', statics(__dirname + '/bower_components/jquery/dist/jquery.min.js'));
-app.use(statics(path.join(__dirname, '/views')));
+app.use(statics('public'));
 
 var serverPort = 443;
 
 var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
-
-app.use(require('serve-static')(__dirname + '/../../views'));
 app.use(require('cookie-parser')());
 //-------------------------------------------------------passport
 app.use(require('express-session')({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
-
-
-
 
 passport.use(new LocalStrategy(Account.authenticate()));
 
@@ -59,13 +48,9 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 
-var port = process.env.PORT || 3000;
 
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(statics(path.join(__dirname, '/views')));
-
-// app.use('/', routes);
-app.use(logger('dev'));
+//app.use(statics(path.join(__dirname, '/views')));
 app.use(bodyParser.json());
 
 
@@ -769,7 +754,6 @@ app.post('/login', passport.authenticate('local'), function(req, res) {
         res.redirect('/judge');
     }else{
         res.redirect('/admin');
-
     }
 });
 app.post('/register', LoggedAdmin(), function(req, res) {
@@ -798,6 +782,4 @@ app.get('/admin', LoggedAdmin(), function (req, res) {
 app.get('/judge', LoggedJudge(), function (req, res) {
     res.render(__dirname + '/views/judge.ejs', {judgecode: req.user.username});
 });
-
-module.exports = app;
 
